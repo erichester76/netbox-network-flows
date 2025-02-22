@@ -24,7 +24,7 @@ items = (
     ),
 )
 
-navigation = PluginMenu(
+menu = PluginMenu(
     label='Network Flows',
     icon_class='mdi mdi-network',
     groups=(('Flows', items),)
