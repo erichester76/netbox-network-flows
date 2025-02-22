@@ -9,7 +9,7 @@ class TrafficFlowsConfig(PluginConfig):
     author = 'Eric Hester'
     author_email = 'hester1@clemson.edu'
     base_url = 'flows'
-    min_version = '4.1'
-    max_version = '4.2'
+    min_version = '4.1.0'
+    max_version = '4.2.99'
 
 config = TrafficFlowsConfig
