@@ -6,6 +6,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'netbox>=4.1.0',
+        'netbox>=4.1',
     ],
 )
