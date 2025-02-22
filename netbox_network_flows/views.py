@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from netbox.views import generic
-from netbox.registry import register_model_view
+from utilities.views import register_model_view
 from virtualization.models import VirtualMachine
 from .models import TrafficFlow
 from .tables import TrafficFlowTable
