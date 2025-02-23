@@ -8,7 +8,6 @@ from dcim.models import Device
 from ipam.models import IPAddress
 
 class TrafficFlowForm(NetBoxModelForm):
-    # Content type selection fields
     src_content_type = forms.ChoiceField(
         choices=[],
         required=False,
@@ -22,29 +21,23 @@ class TrafficFlowForm(NetBoxModelForm):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     
-    # Dynamic object selection fields tied to content type
     src_object = DynamicModelChoiceField(
-        queryset=VirtualMachine.objects.all(),  # Default to VirtualMachine as base
+        queryset=VirtualMachine.objects.all(),
         required=False,
         label='Source Object',
         null_option='None',
-        query_params={
-            'content_type_id': '$src_content_type'  # Filter by selected type
-        }
+        query_params={'content_type_id': '$src_content_type'}
     )
     dst_object = DynamicModelChoiceField(
-        queryset=VirtualMachine.objects.all(),  # Default to VirtualMachine as base
+        queryset=VirtualMachine.objects.all(),
         required=False,
         label='Destination Object',
         null_option='None',
-        query_params={
-            'content_type_id': '$dst_content_type'  # Filter by selected type
-        }
+        query_params={'content_type_id': '$dst_content_type'}
     )
 
     class Meta:
         model = TrafficFlow
-        # Exclude GFK fields, include only concrete fields
         fields = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'src_content_type', 'dst_content_type', 'timestamp')
         widgets = {
             'timestamp': forms.NumberInput(attrs={'step': '0.01'}),
@@ -53,7 +46,6 @@ class TrafficFlowForm(NetBoxModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Define allowed content types
         allowed_models = [VirtualMachine, Device, IPAddress]
         content_types = ContentType.objects.get_for_models(*allowed_models)
         type_choices = [('', '---------')] + [(ct.pk, ct.model_class()._meta.verbose_name.title()) for ct in content_types.values()]
@@ -61,7 +53,6 @@ class TrafficFlowForm(NetBoxModelForm):
         self.fields['src_content_type'].choices = type_choices
         self.fields['dst_content_type'].choices = type_choices
 
-        # Prepopulate if editing an existing instance
         if self.instance.pk:
             if self.instance.src_content_type:
                 self.initial['src_content_type'] = self.instance.src_content_type.pk
@@ -75,7 +66,6 @@ class TrafficFlowForm(NetBoxModelForm):
     def clean(self):
         cleaned_data = super().clean()
         
-        # Handle src_content_type and src_object
         src_content_type_id = cleaned_data.get('src_content_type')
         src_object = cleaned_data.get('src_object')
         if src_content_type_id and src_object:
@@ -85,7 +75,6 @@ class TrafficFlowForm(NetBoxModelForm):
             self.instance.src_content_type = None
             self.instance.src_object_id = None
 
-        # Handle dst_content_type and dst_object
         dst_content_type_id = cleaned_data.get('dst_content_type')
         dst_object = cleaned_data.get('dst_object')
         if dst_content_type_id and dst_object:
