@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import DynamicModelChoiceField
-from .models import TrafficFlow
+from netbox_network_flows.models import TrafficFlow
 from virtualization.models import VirtualMachine
 from dcim.models import Device
 from ipam.models import IPAddress
@@ -27,14 +27,14 @@ class TrafficFlowForm(NetBoxModelForm):
     )
     
     src_object = DynamicModelChoiceField(
-        queryset=VirtualMachine.objects.all(),
+        queryset=VirtualMachine.objects.none(),  # Start with empty, filter dynamically
         required=False,
         label='Source Object',
         null_option='None',
         query_params={'content_type_id': '$src_content_type'}
     )
     dst_object = DynamicModelChoiceField(
-        queryset=VirtualMachine.objects.all(),
+        queryset=VirtualMachine.objects.none(),  # Start with empty, filter dynamically
         required=False,
         label='Destination Object',
         null_option='None',
@@ -60,15 +60,23 @@ class TrafficFlowForm(NetBoxModelForm):
             self.fields['src_content_type'].choices = type_choices
             self.fields['dst_content_type'].choices = type_choices
 
+            # Log initial values and querysets
             if self.instance.pk:
                 if self.instance.src_content_type:
+                    logger.debug(f"Instance src_content_type: {self.instance.src_content_type}, initial: {self.instance.src_content_type.pk}")
                     self.initial['src_content_type'] = self.instance.src_content_type.pk
                     self.initial['src_object'] = self.instance.src_object
                     self.fields['src_object'].queryset = self.instance.src_content_type.model_class().objects.all()
+                    logger.debug(f"Set src_object queryset to: {self.instance.src_content_type.model_class().__name__}")
                 if self.instance.dst_content_type:
+                    logger.debug(f"Instance dst_content_type: {self.instance.dst_content_type}, initial: {self.instance.dst_content_type.pk}")
                     self.initial['dst_content_type'] = self.instance.dst_content_type.pk
                     self.initial['dst_object'] = self.instance.dst_object
                     self.fields['dst_object'].queryset = self.instance.dst_content_type.model_class().objects.all()
+                    logger.debug(f"Set dst_object queryset to: {self.instance.dst_content_type.model_class().__name__}")
+            else:
+                logger.debug("New instance, initial querysets set to empty")
+
             logger.debug("TrafficFlowForm.__init__ completed successfully")
         except Exception as e:
             logger.error(f"Error in TrafficFlowForm.__init__: {str(e)}", exc_info=True)
@@ -81,6 +89,7 @@ class TrafficFlowForm(NetBoxModelForm):
             
             src_content_type_id = cleaned_data.get('src_content_type')
             src_object = cleaned_data.get('src_object')
+            logger.debug(f"Cleaning src: content_type_id={src_content_type_id}, object={src_object}")
             if src_content_type_id and src_object:
                 self.instance.src_content_type = ContentType.objects.get(pk=src_content_type_id)
                 self.instance.src_object_id = src_object.pk
@@ -90,6 +99,7 @@ class TrafficFlowForm(NetBoxModelForm):
 
             dst_content_type_id = cleaned_data.get('dst_content_type')
             dst_object = cleaned_data.get('dst_object')
+            logger.debug(f"Cleaning dst: content_type_id={dst_content_type_id}, object={dst_object}")
             if dst_content_type_id and dst_object:
                 self.instance.dst_content_type = ContentType.objects.get(pk=dst_content_type_id)
                 self.instance.dst_object_id = dst_object.pk
