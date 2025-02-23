@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import TrafficFlowListView, TrafficFlowEditView, TrafficFlowImportView
+from .views import TrafficFlowListView, TrafficFlowEditView, TrafficFlowImportView, TrafficFlowBulkEditView, TrafficFlowBulkDeleteView
 
 
 urlpatterns = [
