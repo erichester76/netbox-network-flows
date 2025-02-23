@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from traffic_flows.models import TrafficFlow
-from traffic_flows.api.serializers import TrafficFlowSerializer
+from ..models import TrafficFlow
+from .serializers import TrafficFlowSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 class TrafficFlowViewSet(viewsets.ModelViewSet):
