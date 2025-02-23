@@ -27,13 +27,13 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
                 flow['server_id'] = server_id  # Override server_id if provided in bulk
                 serializer = self.get_serializer(data=flow)
                 serializer.is_valid(raise_exception=True)
-                serializer.save()
+                serializer.save()  # Triggers model's save() method
                 created_flows.append(serializer.data)
             return Response(created_flows, status=status.HTTP_201_CREATED)
         
         # Handle single flow creation
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        serializer.save()  # Triggers model's save() method
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

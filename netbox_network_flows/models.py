@@ -5,6 +5,9 @@ from netbox.models import NetBoxModel
 from ipam.models import IPAddress
 from virtualization.models import VirtualMachine
 from dcim.models import Device
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TrafficFlow(NetBoxModel):
     src_ip = models.CharField(max_length=45)
@@ -26,41 +29,49 @@ class TrafficFlow(NetBoxModel):
     def save(self, *args, **kwargs):
         # Resolve src_ip via IPAddress
         if not self.src_content_type or not self.src_object_id:
-            ip_part = self.src_ip.split('/')[0]  # Strip subnet if present
+            ip_part = self.src_ip.split('/')[0]
+            logger.debug(f"Looking up src_ip: {ip_part}")
             try:
                 ip = IPAddress.objects.get(address__startswith=ip_part)
+                logger.debug(f"Found IPAddress for src_ip: {ip}")
                 if ip.assigned_object:
                     if isinstance(ip.assigned_object, VirtualMachine):
                         self.src_content_type = ContentType.objects.get_for_model(VirtualMachine)
                         self.src_object_id = ip.assigned_object.pk
+                        logger.debug(f"Assigned src to VirtualMachine: {ip.assigned_object}")
                     elif isinstance(ip.assigned_object, Device):
                         self.src_content_type = ContentType.objects.get_for_model(Device)
                         self.src_object_id = ip.assigned_object.pk
+                        logger.debug(f"Assigned src to Device: {ip.assigned_object}")
                 else:
-                    # Link to IPAddress itself if no assignment
                     self.src_content_type = ContentType.objects.get_for_model(IPAddress)
                     self.src_object_id = ip.pk
+                    logger.debug(f"Assigned src to IPAddress: {ip}")
             except IPAddress.DoesNotExist:
-                pass
+                logger.debug(f"No IPAddress found for src_ip: {ip_part}")
 
         # Resolve dst_ip via IPAddress
         if not self.dst_content_type or not self.dst_object_id:
-            ip_part = self.dst_ip.split('/')[0]  # Strip subnet if present
+            ip_part = self.dst_ip.split('/')[0]
+            logger.debug(f"Looking up dst_ip: {ip_part}")
             try:
                 ip = IPAddress.objects.get(address__startswith=ip_part)
+                logger.debug(f"Found IPAddress for dst_ip: {ip}")
                 if ip.assigned_object:
                     if isinstance(ip.assigned_object, VirtualMachine):
                         self.dst_content_type = ContentType.objects.get_for_model(VirtualMachine)
                         self.dst_object_id = ip.assigned_object.pk
+                        logger.debug(f"Assigned dst to VirtualMachine: {ip.assigned_object}")
                     elif isinstance(ip.assigned_object, Device):
                         self.dst_content_type = ContentType.objects.get_for_model(Device)
                         self.dst_object_id = ip.assigned_object.pk
+                        logger.debug(f"Assigned dst to Device: {ip.assigned_object}")
                 else:
-                    # Link to IPAddress itself if no assignment
                     self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
                     self.dst_object_id = ip.pk
+                    logger.debug(f"Assigned dst to IPAddress: {ip}")
             except IPAddress.DoesNotExist:
-                pass
+                logger.debug(f"No IPAddress found for dst_ip: {ip_part}")
 
         super().save(*args, **kwargs)
 
