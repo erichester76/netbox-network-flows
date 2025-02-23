@@ -27,7 +27,10 @@ class TrafficFlow(NetBoxModel):
         # Resolve src_ip via IPAddress
         if not self.src_content_type or not self.src_object_id:
             ip_part = self.src_ip.split('/')[0]
-            ip = IPAddress.objects.filter(address__isw=ip_part).first()
+            ip = IPAddress.objects.filter(address__startswith=ip_part).filter(
+                models.Q(address__endswith=f"/{ip_part.split('.')[3]}") | 
+                models.Q(address=ip_part)
+            ).first()
             if ip:
                 assigned_obj = ip.assigned_object
                 if assigned_obj:
@@ -47,7 +50,10 @@ class TrafficFlow(NetBoxModel):
         # Resolve dst_ip via IPAddress
         if not self.dst_content_type or not self.dst_object_id:
             ip_part = self.dst_ip.split('/')[0]
-            ip = IPAddress.objects.filter(address__isw=ip_part).first()
+            ip = IPAddress.objects.filter(address__startswith=ip_part).filter(
+                models.Q(address__endswith=f"/{ip_part.split('.')[3]}") | 
+                models.Q(address=ip_part)
+            ).first()
             if ip:
                 assigned_obj = ip.assigned_object
                 if assigned_obj:
