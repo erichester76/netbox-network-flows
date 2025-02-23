@@ -49,5 +49,9 @@ class TrafficFlowEditView(generic.ObjectEditView):
 class TrafficFlowImportView(generic.ObjectView):
     queryset = TrafficFlow.objects.all()
 
-    def get_extra_context(self, request, instance):
-        return {}
+class TrafficFlowDetailView(generic.ObjectView):
+    queryset = TrafficFlow.objects.all()
+
+class TrafficFlowDeleteView(generic.ObjectDeleteView):
+    queryset = TrafficFlow.objects.all()
+    default_return_url = 'plugins:netbox_network_flows:trafficflow_list'
