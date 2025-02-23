@@ -1,14 +1,13 @@
-from utilities.views import register_model_view, ViewTab
-from django.shortcuts import get_object_or_404
-from netbox.views import generic
-from virtualization.models import VirtualMachine
-from dcim.models import Device
-from netbox_network_flows.models import TrafficFlow
-from netbox_network_flows.tables import TrafficFlowTable
-from netbox_network_flows.forms import TrafficFlowForm
+from .models import TrafficFlow
+from .tables import TrafficFlowTable
+from .forms import TrafficFlowForm
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from collections import defaultdict  # Added import
+from utilities.views import register_model_view, ViewTab
+from netbox.views import generic
+from virtualization.models import VirtualMachine
+from dcim.models import Device
 
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
@@ -28,13 +27,13 @@ class TrafficFlowDeleteView(generic.ObjectDeleteView):
     queryset = TrafficFlow.objects.all()
     default_return_url = 'netbox_network_flows:flow_list'
 
-class TrafficFlowImportView(generic.ObjectView):
+class TrafficFlowImportView(generic.BulkImportView):
     queryset = TrafficFlow.objects.all()
 
-class TrafficFlowBulkEditView(generic.ObjectBulkEditView):
+class TrafficFlowBulkEditView(generic.BulkEditView):
     queryset = TrafficFlow.objects.all()
     
-class TrafficFlowBulkDeleteView(generic.ObjectBulkDeleteView):
+class TrafficFlowBulkDeleteView(generic.BulkDeleteView):
     queryset = TrafficFlow.objects.all()
     
 class TrafficFlowChangelogView(generic.ObjectChangelogView):
