@@ -8,7 +8,6 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
     serializer_class = TrafficFlowSerializer
 
     def create(self, request, *args, **kwargs):
-        # Handle bulk creation from agent submissions
         if isinstance(request.data, dict) and 'flows' in request.data:
             flows = request.data['flows']
             server_id = request.data.get('server_id', '')
