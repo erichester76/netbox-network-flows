@@ -1,6 +1,6 @@
+from utilities.views import register_model_view, ViewTab
 from django.shortcuts import get_object_or_404
 from netbox.views import generic
-from netbox.views import ViewTab, register_model_view
 from virtualization.models import VirtualMachine
 from dcim.models import Device
 from netbox_network_flows.models import TrafficFlow
@@ -13,6 +13,12 @@ from collections import defaultdict  # Added import
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
     table = TrafficFlowTable
+    actions = {
+        'add': {'add': True},
+        'edit': {'change': True},
+        'delete': {'delete': True},
+        'import': {'add': True}
+    }
 
 class TrafficFlowEditView(generic.ObjectEditView):
     queryset = TrafficFlow.objects.all()
