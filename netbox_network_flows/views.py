@@ -9,7 +9,7 @@ from utilities.forms import ConfirmationForm
 @register_model_view(VirtualMachine, 'flows', path='flows')
 class VirtualMachineFlowsView(ObjectView):
     queryset = VirtualMachine.objects.all()
-    template_name = 'netbox_traffic_flows/vm_flows_tab.html'
+    template_name = 'netbox_network_flows/vm_flows_tab.html'
 
     tab = ViewTab(
         label='Traffic Flows',
