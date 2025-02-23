@@ -1,13 +1,13 @@
-from django.shortcuts import get_object_or_404
-from netbox.views import generic
+from netbox.views.generic import ObjectListView, ObjectEditView, ObjectDeleteView, ObjectView, BulkImportView, BulkEditView, BulkDeleteView, ObjectChangeLogView
 from utilities.views import register_model_view
 from virtualization.models import VirtualMachine
 from .models import TrafficFlow
 from .tables import TrafficFlowTable
 from .forms import TrafficFlowForm
+from utilities.forms import ConfirmationForm
 
 @register_model_view(VirtualMachine, 'flows', path='flows')
-class VirtualMachineFlowsView(generic.ObjectView):
+class VirtualMachineFlowsView(ObjectView):
     queryset = VirtualMachine.objects.all()
     template_name = 'netbox_traffic_flows/vm_flows_tab.html'
 
@@ -38,20 +38,32 @@ class VirtualMachineFlowsView(generic.ObjectView):
             'mermaid_code': mermaid_code,
         }
 
-class TrafficFlowListView(generic.ObjectListView):
+class TrafficFlowListView(ObjectListView):
     queryset = TrafficFlow.objects.all()
     table = TrafficFlowTable
 
-class TrafficFlowEditView(generic.ObjectEditView):
+class TrafficFlowEditView(ObjectEditView):
     queryset = TrafficFlow.objects.all()
     form = TrafficFlowForm
 
-class TrafficFlowImportView(generic.ObjectView):
+class TrafficFlowImportView(ObjectView):
     queryset = TrafficFlow.objects.all()
 
-class TrafficFlowDetailView(generic.ObjectView):
+class TrafficFlowDetailView(ObjectView):
     queryset = TrafficFlow.objects.all()
 
-class TrafficFlowDeleteView(generic.ObjectDeleteView):
+class TrafficFlowDeleteView(ObjectDeleteView):
     queryset = TrafficFlow.objects.all()
+    default_return_url = 'plugins:netbox_network_flows:trafficflow_list'
+    
+class TrafficFlowBulkEditView(BulkEditView):
+    queryset = TrafficFlow.objects.all()
+    table = TrafficFlowTable
+    form = TrafficFlowForm
+    default_return_url = 'plugins:netbox_network_flows:trafficflow_list'
+
+class TrafficFlowBulkDeleteView(BulkDeleteView):
+    queryset = TrafficFlow.objects.all()
+    table = TrafficFlowTable
+    confirmation_form = ConfirmationForm
     default_return_url = 'plugins:netbox_network_flows:trafficflow_list'

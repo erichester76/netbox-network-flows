@@ -7,6 +7,7 @@ urlpatterns = [
     path('flows/add/', TrafficFlowEditView.as_view(), name='trafficflow_add'),
     path('flows/<int:pk>/edit/', TrafficFlowEditView.as_view(), name='trafficflow_edit'),
     path('flows/<int:pk>/delete/', TrafficFlowEditView.as_view(), name='trafficflow_delete'),
-    path('flows/import/', TrafficFlowImportView.as_view(), name='trafficflow_import'),
-    path('flows/<int:pk>/', TrafficFlowEditView.as_view(), name='trafficflow'),
+    path('flows/bulk/import/', TrafficFlowImportView.as_view(), name='trafficflow_bulk_import'),
+    path('flows/bulk/edit/', TrafficFlowBulkEditView.as_view(), name='trafficflow_bulk_edit'),
+    path('flows/bulk/delete/', TrafficFlowBulkDeleteView.as_view(), name='trafficflow_bulk_delete'),    path('flows/<int:pk>/', TrafficFlowEditView.as_view(), name='trafficflow'),
     path('flows/<int:pk>/changelog/', TrafficFlowEditView.as_view(), name='trafficflow_changelog'),]
