@@ -26,9 +26,8 @@ class TrafficFlow(NetBoxModel):
 
     def save(self, *args, **kwargs):
         if not self.src_content_type or not self.src_object_id:
-            ip_part = self.src_ip.split('/')[0]
             try:
-                ip = IPAddress.objects.filter(address__net_contains_or_equals=ip_part).first()
+                ip = IPAddress.objects.filter(address__contains=self.src_ip).first()
                 if ip:
                     if ip.assigned_object:
                         if isinstance(ip.assigned_object, VirtualMachine):
@@ -41,13 +40,12 @@ class TrafficFlow(NetBoxModel):
                         self.src_content_type = ContentType.objects.get_for_model(IPAddress)
                         self.src_object_id = ip.pk
             except Exception as e:
-                print(f"Error resolving src_ip {ip_part}: {str(e)}", exc_info=True)
+                print(f"Error resolving src_ip {self.src_ip}: {str(e)}", exc_info=True)
 
         # Resolve dst_ip via IPAddress
         if not self.dst_content_type or not self.dst_object_id:
-            ip_part = self.dst_ip.split('/')[0]
             try:
-                ip = IPAddress.objects.filter(address__net_contains_or_equals=ip_part).first()
+                ip = IPAddress.objects.filter(address__contains=self.src_ip).first()
                 if ip:
                     if ip.assigned_object:
                         if isinstance(ip.assigned_object, VirtualMachine):
@@ -60,14 +58,13 @@ class TrafficFlow(NetBoxModel):
                         self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
                         self.dst_object_id = ip.pk
             except Exception as e:
-                print(f"Error resolving dst_ip {ip_part}: {str(e)}", exc_info=True)
+                print(f"Error resolving dst_ip {self.dst_ip}: {str(e)}", exc_info=True)
 
         super().save(*args, **kwargs)
         
         if not self.src_content_type or not self.src_object_id:
-            ip_part = self.src_ip.split('/')[0]
             try:
-                ip = IPAddress.objects.get(address__startswith=ip_part)
+                ip = IPAddress.objects.get(address__contains=self.src_ip)
                 if ip.assigned_object:
                     if isinstance(ip.assigned_object, VirtualMachine):
                         self.src_content_type = ContentType.objects.get_for_model(VirtualMachine)
@@ -79,13 +76,12 @@ class TrafficFlow(NetBoxModel):
                     self.src_content_type = ContentType.objects.get_for_model(IPAddress)
                     self.src_object_id = ip.pk
             except IPAddress.DoesNotExist:
-                print(f"No IPAddress found for src_ip: {ip_part}")
+                print(f"No IPAddress found for src_ip: {self.src_ip}")
 
         # Resolve dst_ip via IPAddress
         if not self.dst_content_type or not self.dst_object_id:
-            ip_part = self.dst_ip.split('/')[0]
             try:
-                ip = IPAddress.objects.get(address__startswith=ip_part)
+                ip = IPAddress.objects.get(address__contains=self.dst_ip)
                 if ip.assigned_object:
                     if isinstance(ip.assigned_object, VirtualMachine):
                         self.dst_content_type = ContentType.objects.get_for_model(VirtualMachine)
@@ -97,7 +93,7 @@ class TrafficFlow(NetBoxModel):
                     self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
                     self.dst_object_id = ip.pk
             except IPAddress.DoesNotExist:
-                print(f"No IPAddress found for dst_ip: {ip_part}")
+                print(f"No IPAddress found for dst_ip: {self.dst_ip}")
 
         super().save(*args, **kwargs)
 
