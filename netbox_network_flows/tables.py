@@ -1,4 +1,3 @@
-import django_tables2 as tables
 from .models import TrafficFlow
 from netbox.tables import NetBoxTable, columns
 
@@ -7,5 +6,5 @@ class TrafficFlowTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = TrafficFlow
-        fields = ('id', 'src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'timestamp')
-        default_columns = ('id', 'src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')
+        fields = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'timestamp')
+        default_columns = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')

@@ -15,7 +15,7 @@ items = (
                 link='plugins:netbox_network_flows:trafficflow_import',
                 title='Import',
                 icon_class='mdi mdi-upload',
-                permissions=['netbox_network_flows.add_low']
+                permissions=['netbox_network_flows.add_flow']
             ),
         ),
         permissions=['netbox_network_flows.view_flow']
