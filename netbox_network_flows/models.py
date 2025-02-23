@@ -26,7 +26,7 @@ class TrafficFlow(NetBoxModel):
     def save(self, *args, **kwargs):
         # Resolve src_ip via IPAddress
         if not self.src_content_type or not self.src_object_id:
-            ip = IPAddress.objects.filter(address__startswith=self.src_ip+"/").first()
+            ip = IPAddress.objects.filter(address__startswith=self.src_ip+'/').first()
             if ip:
                 assigned_obj = ip.assigned_object
                 if assigned_obj:
