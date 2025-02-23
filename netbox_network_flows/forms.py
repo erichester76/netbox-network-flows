@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from netbox.forms import NetBoxModelForm, DynamicModelChoiceField
+from netbox.forms import NetBoxModelForm
+from utilities.forms.fields import DynamicModelChoiceField  # Correct import
 from .models import TrafficFlow
 from virtualization.models import VirtualMachine
 from dcim.models import Device
