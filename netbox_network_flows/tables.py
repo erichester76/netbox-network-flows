@@ -8,5 +8,5 @@ class TrafficFlowTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = TrafficFlow
-        fields = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'server_id', 'timestamp')
+        fields = ('pk', 'id', 'src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'server_id', 'timestamp')
         default_columns = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port')
