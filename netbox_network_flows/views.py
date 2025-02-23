@@ -9,7 +9,7 @@ from .forms import TrafficFlowForm
 @register_model_view(VirtualMachine, 'flows', path='flows')
 class VirtualMachineFlowsView(generic.ObjectView):
     queryset = VirtualMachine.objects.all()
-    template_name = 'netbox_traffic_flows/vm_flow_tab.html'
+    template_name = 'netbox_traffic_flows/vm_flows_tab.html'
 
     tab = {
         'title': 'Traffic Flows',
@@ -42,16 +42,13 @@ class VirtualMachineFlowsView(generic.ObjectView):
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
     table = TrafficFlowTable
-    template_name = 'netbox_traffic_flows/flow_list.html'
 
 class TrafficFlowEditView(generic.ObjectEditView):
     queryset = TrafficFlow.objects.all()
     form = TrafficFlowForm
-    template_name = 'netbox_traffic_flows/flow_edit.html'
 
 class TrafficFlowImportView(generic.ObjectView):
     queryset = TrafficFlow.objects.all()
-    template_name = 'netbox_traffic_flows/flow_import.html'
 
     def get_extra_context(self, request, instance):
         return {}
