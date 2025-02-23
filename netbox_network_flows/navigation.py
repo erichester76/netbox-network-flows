@@ -9,14 +9,12 @@ items = (
                 link='plugins:netbox_network_flows:flow_add',
                 title='Add',
                 icon_class='mdi mdi-plus-thick',
-                color='green',
                 permissions=['netbox_network_flows.add_trafficflow']
             ),
             PluginMenuButton(
                 link='plugins:netbox_network_flows:flow_import',
                 title='Import',
                 icon_class='mdi mdi-upload',
-                color='blue',
                 permissions=['netbox_network_flows.add_trafficflow']
             ),
         ),

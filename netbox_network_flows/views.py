@@ -14,7 +14,7 @@ class VirtualMachineFlowsView(generic.ObjectView):
     tab = {
         'title': 'Traffic Flows',
         'badge': lambda obj: obj.traffic_flows.count(),
-        'permission': 'traffic_flows.view_trafficflow'
+        'permissions': 'netbox_network_flows.view_trafficflow'
     }
 
     def get_extra_context(self, request, instance):
