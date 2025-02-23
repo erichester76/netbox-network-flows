@@ -3,12 +3,12 @@ from netbox.models import NetBoxModel
 from virtualization.models import VirtualMachine
 
 class TrafficFlow(NetBoxModel):
-    src_ip = models.CharField(max_length=45)  # Supports IPv4/IPv6
+    src_ip = models.CharField(max_length=45) 
     dst_ip = models.CharField(max_length=45)
     protocol = models.CharField(max_length=10)
     src_port = models.IntegerField()
     dst_port = models.IntegerField()
-    server_id = models.CharField(max_length=100)  # Matches VM name or hostname
+    server_id = models.CharField(max_length=100)  
     virtual_machine = models.ForeignKey(
         VirtualMachine,
         on_delete=models.SET_NULL,
