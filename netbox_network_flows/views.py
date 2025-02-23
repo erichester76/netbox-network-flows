@@ -31,9 +31,15 @@ class TrafficFlowDeleteView(generic.ObjectDeleteView):
 class TrafficFlowImportView(generic.ObjectView):
     queryset = TrafficFlow.objects.all()
 
-    def get_extra_context(self, request, instance):
-        return {}
-
+class TrafficFlowBulkEditView(generic.ObjectBulkEditView):
+    queryset = TrafficFlow.objects.all()
+    
+class TrafficFlowBulkDeleteView(generic.ObjectBulkDeleteView):
+    queryset = TrafficFlow.objects.all()
+    
+class TrafficFlowChangelogView(generic.ObjectChangelogView):
+    queryset = TrafficFlow.objects.all()
+    
 @register_model_view(VirtualMachine, 'flows', path='flows')
 class VirtualMachineFlowsView(generic.ObjectView):
     queryset = VirtualMachine.objects.all()
