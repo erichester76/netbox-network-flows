@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 from netbox.views import generic
-from netbox.registry import register_model_view
-from netbox.views.generic.base import ViewTab
+from netbox.views import ViewTab, register_model_view
 from virtualization.models import VirtualMachine
 from dcim.models import Device
 from netbox_network_flows.models import TrafficFlow
