@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name='trafficflow',
-            unique_together={('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')},
-        ),
         migrations.AddField(
             model_name='trafficflow',
             name='dst_content_type',
@@ -31,6 +27,10 @@ class Migration(migrations.Migration):
             name='service_port',
             field=models.IntegerField(default=0),
             preserve_default=False,
+        ),
+       migrations.AlterUniqueTogether(
+            name='trafficflow',
+            unique_together={('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')},
         ),
         migrations.AddField(
             model_name='trafficflow',
