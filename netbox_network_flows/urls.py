@@ -2,6 +2,8 @@ from django.urls import path, include
 from .views import TrafficFlowListView, TrafficFlowEditView, TrafficFlowImportView, TrafficFlowBulkEditView, TrafficFlowBulkDeleteView, TrafficFlowChangelogView
 from .models import TrafficFlow
 
+app_name = 'netbox_network_flows' 
+
 urlpatterns = [
     path('flows/', TrafficFlowListView.as_view(), name='trafficflow_list'),
     path('flows/add/', TrafficFlowEditView.as_view(), name='trafficflow_add'),

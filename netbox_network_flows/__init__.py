@@ -1,7 +1,6 @@
-from netbox.plugins import PluginConfig, PluginMenuItem, PluginMenu
-from django.urls import reverse
+from netbox.plugins import PluginConfig
 
-class TrafficFlowsConfig(PluginConfig):
+class NetworkFlowsConfig(PluginConfig):
     name = 'netbox_network_flows'
     verbose_name = 'Traffic Flows'
     description = 'Manage network traffic flows between servers'
@@ -12,4 +11,4 @@ class TrafficFlowsConfig(PluginConfig):
     min_version = '4.1.0'
     max_version = '4.2.99'
 
-config = TrafficFlowsConfig
+config = NetworkFlowsConfig
