@@ -25,39 +25,31 @@ class TrafficFlow(NetBoxModel):
         unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')
 
     def save(self, *args, **kwargs):
-        if not self.src_content_type or not self.src_object_id:
-            try:
-                ip = IPAddress.objects.filter(address__startswith=self.src_ip).first()
-                if ip:
-                    if ip.assigned_object:
-                        if isinstance(ip.assigned_object, VirtualMachine):
-                            self.src_content_type = ContentType.objects.get_for_model(VirtualMachine)
-                            self.src_object_id = ip.assigned_object.pk
-                        elif isinstance(ip.assigned_object, Device):
-                            self.src_content_type = ContentType.objects.get_for_model(Device)
-                            self.src_object_id = ip.assigned_object.pk
-                    else:
-                        self.src_content_type = ContentType.objects.get_for_model(IPAddress)
-                        self.src_object_id = ip.pk
-            except Exception as e:
-                print(f"Error resolving src_ip {self.src_ip}: {str(e)}", exc_info=True)
+        ip = IPAddress.objects.filter(address__startswith=self.src_ip).first()
+        if ip:
+            if ip.assigned_object:
+                if isinstance(ip.assigned_object, VirtualMachine):
+                    self.src_content_type = ContentType.objects.get_for_model(VirtualMachine)
+                    self.src_object_id = ip.assigned_object.pk
+                elif isinstance(ip.assigned_object, Device):
+                    self.src_content_type = ContentType.objects.get_for_model(Device)
+                    self.src_object_id = ip.assigned_object.pk
+            else:
+                self.src_content_type = ContentType.objects.get_for_model(IPAddress)
+                self.src_object_id = ip.pk
 
-        if not self.dst_content_type or not self.dst_object_id:
-            try:
-                ip = IPAddress.objects.filter(address__startswith=self.dst_ip).first()
-                if ip:
-                    if ip.assigned_object:
-                        if isinstance(ip.assigned_object, VirtualMachine):
-                            self.dst_content_type = ContentType.objects.get_for_model(VirtualMachine)
-                            self.dst_object_id = ip.assigned_object.pk
-                        elif isinstance(ip.assigned_object, Device):
-                            self.dst_content_type = ContentType.objects.get_for_model(Device)
-                            self.dst_object_id = ip.assigned_object.pk
-                    else:
-                        self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
-                        self.dst_object_id = ip.pk
-            except Exception as e:
-                print(f"Error resolving dst_ip {self.dst_ip}: {str(e)}", exc_info=True)
+        ip = IPAddress.objects.filter(address__startswith=self.dst_ip).first()
+        if ip:
+            if ip.assigned_object:
+                if isinstance(ip.assigned_object, VirtualMachine):
+                    self.dst_content_type = ContentType.objects.get_for_model(VirtualMachine)
+                    self.dst_object_id = ip.assigned_object.pk
+                elif isinstance(ip.assigned_object, Device):
+                    self.dst_content_type = ContentType.objects.get_for_model(Device)
+                    self.dst_object_id = ip.assigned_object.pk
+            else:
+                self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
+                self.dst_object_id = ip.pk
 
         super().save(*args, **kwargs)
 
