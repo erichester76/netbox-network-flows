@@ -44,7 +44,8 @@ class TrafficFlowForm(NetBoxModelForm):
 
     class Meta:
         model = TrafficFlow
-        fields = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'src_content_type', 'src_object', 'dst_content_type', 'dst_object', 'timestamp')
+        # Exclude GFK fields, include only concrete fields
+        fields = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'src_content_type', 'dst_content_type', 'timestamp')
         widgets = {
             'timestamp': forms.NumberInput(attrs={'step': '0.01'}),
         }
@@ -65,12 +66,10 @@ class TrafficFlowForm(NetBoxModelForm):
             if self.instance.src_content_type:
                 self.initial['src_content_type'] = self.instance.src_content_type.pk
                 self.initial['src_object'] = self.instance.src_object
-                # Update queryset to match the instance's content type
                 self.fields['src_object'].queryset = self.instance.src_content_type.model_class().objects.all()
             if self.instance.dst_content_type:
                 self.initial['dst_content_type'] = self.instance.dst_content_type.pk
                 self.initial['dst_object'] = self.instance.dst_object
-                # Update queryset to match the instance's content type
                 self.fields['dst_object'].queryset = self.instance.dst_content_type.model_class().objects.all()
 
     def clean(self):
