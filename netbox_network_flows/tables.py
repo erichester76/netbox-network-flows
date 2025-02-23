@@ -3,12 +3,6 @@ from .models import TrafficFlow
 from netbox.tables import NetBoxTable, columns
 
 class TrafficFlowTable(NetBoxTable):
-    src_ip = tables.Column(verbose_name='Source IP')
-    dst_ip = tables.Column(verbose_name='Destination IP')
-    protocol = tables.Column()
-    src_port = tables.Column(verbose_name='Source Port')
-    dst_port = tables.Column(verbose_name='Destination Port')
-    server_id = tables.Column(verbose_name='Server ID')
     virtual_machine = tables.Column(linkify=True)
     timestamp = columns.DateTimeColumn()
 
