@@ -67,3 +67,6 @@ class TrafficFlowBulkDeleteView(BulkDeleteView):
     table = TrafficFlowTable
     confirmation_form = ConfirmationForm
     default_return_url = 'plugins:netbox_network_flows:trafficflow_list'
+    
+class TrafficFlowChangelogView(ObjectChangeLogView):
+    queryset = TrafficFlow.objects.all()

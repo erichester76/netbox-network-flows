@@ -1,6 +1,6 @@
 from django.urls import path, include
-from .views import TrafficFlowListView, TrafficFlowEditView, TrafficFlowImportView, TrafficFlowBulkEditView, TrafficFlowBulkDeleteView
-
+from .views import TrafficFlowListView, TrafficFlowEditView, TrafficFlowImportView, TrafficFlowBulkEditView, TrafficFlowBulkDeleteView, TrafficFlowChangelogView
+from .models import TrafficFlow
 
 urlpatterns = [
     path('flows/', TrafficFlowListView.as_view(), name='trafficflow_list'),
@@ -9,5 +9,6 @@ urlpatterns = [
     path('flows/<int:pk>/delete/', TrafficFlowEditView.as_view(), name='trafficflow_delete'),
     path('flows/bulk/import/', TrafficFlowImportView.as_view(), name='trafficflow_bulk_import'),
     path('flows/bulk/edit/', TrafficFlowBulkEditView.as_view(), name='trafficflow_bulk_edit'),
-    path('flows/bulk/delete/', TrafficFlowBulkDeleteView.as_view(), name='trafficflow_bulk_delete'),    path('flows/<int:pk>/', TrafficFlowEditView.as_view(), name='trafficflow'),
-    path('flows/<int:pk>/changelog/', TrafficFlowEditView.as_view(), name='trafficflow_changelog'),]
+    path('flows/bulk/delete/', TrafficFlowBulkDeleteView.as_view(), name='trafficflow_bulk_delete'),    
+    path('flows/<int:pk>/changelog/', TrafficFlowChangelogView.as_view(), name='trafficflow_changelog', kwargs={'model': TrafficFlow})
+]
