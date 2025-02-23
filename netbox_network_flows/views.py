@@ -1,5 +1,5 @@
 from netbox.views.generic import ObjectListView, ObjectEditView, ObjectDeleteView, ObjectView, BulkImportView, BulkEditView, BulkDeleteView, ObjectChangeLogView
-from utilities.views import register_model_view
+from utilities.views import register_model_view, ViewTab
 from virtualization.models import VirtualMachine
 from .models import TrafficFlow
 from .tables import TrafficFlowTable
@@ -11,11 +11,11 @@ class VirtualMachineFlowsView(ObjectView):
     queryset = VirtualMachine.objects.all()
     template_name = 'netbox_traffic_flows/vm_flows_tab.html'
 
-    tab = {
-        'title': 'Traffic Flows',
-        'badge': lambda obj: obj.traffic_flows.count(),
-    }
-
+    tab = ViewTab(
+        label='Traffic Flows',
+        badge=lambda obj: lambda obj: obj.flows.count() or 0,
+    )
+ 
     def get_extra_context(self, request, instance):
         flows = instance.traffic_flows.all()
         mermaid_code = "graph TD\n"
