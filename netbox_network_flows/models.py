@@ -1,35 +1,68 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from netbox.models import NetBoxModel
+from ipam.models import IPAddress
 from virtualization.models import VirtualMachine
+from dcim.models import Device
 
 class TrafficFlow(NetBoxModel):
-    src_ip = models.CharField(max_length=45) 
+    src_ip = models.CharField(max_length=45)
     dst_ip = models.CharField(max_length=45)
     protocol = models.CharField(max_length=10)
-    src_port = models.IntegerField()
-    dst_port = models.IntegerField()
-    server_id = models.CharField(max_length=100)  
-    virtual_machine = models.ForeignKey(
-        VirtualMachine,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='traffic_flows'
-    )
+    service_port = models.IntegerField()
+    server_id = models.CharField(max_length=100)
+    src_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='src_traffic_flows', null=True, blank=True)
+    src_object_id = models.PositiveIntegerField(null=True, blank=True)
+    src_object = GenericForeignKey('src_content_type', 'src_object_id')
+    dst_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='dst_traffic_flows', null=True, blank=True)
+    dst_object_id = models.PositiveIntegerField(null=True, blank=True)
+    dst_object = GenericForeignKey('dst_content_type', 'dst_object_id')
     timestamp = models.FloatField()
 
     class Meta:
-        unique_together = ('src_ip', 'dst_ip', 'protocol', 'src_port', 'dst_port', 'server_id')
+        unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')
 
     def save(self, *args, **kwargs):
-        # Auto-map to VirtualMachine if server_id matches a VM name
-        if not self.virtual_machine and self.server_id:
+        # Resolve src_ip via IPAddress
+        if not self.src_content_type or not self.src_object_id:
+            ip_part = self.src_ip.split('/')[0]  # Strip subnet if present
             try:
-                vm = VirtualMachine.objects.get(name=self.server_id)
-                self.virtual_machine = vm
-            except VirtualMachine.DoesNotExist:
+                ip = IPAddress.objects.get(address__startswith=ip_part)
+                if ip.assigned_object:
+                    if isinstance(ip.assigned_object, VirtualMachine):
+                        self.src_content_type = ContentType.objects.get_for_model(VirtualMachine)
+                        self.src_object_id = ip.assigned_object.pk
+                    elif isinstance(ip.assigned_object, Device):
+                        self.src_content_type = ContentType.objects.get_for_model(Device)
+                        self.src_object_id = ip.assigned_object.pk
+                else:
+                    # Link to IPAddress itself if no assignment
+                    self.src_content_type = ContentType.objects.get_for_model(IPAddress)
+                    self.src_object_id = ip.pk
+            except IPAddress.DoesNotExist:
                 pass
+
+        # Resolve dst_ip via IPAddress
+        if not self.dst_content_type or not self.dst_object_id:
+            ip_part = self.dst_ip.split('/')[0]  # Strip subnet if present
+            try:
+                ip = IPAddress.objects.get(address__startswith=ip_part)
+                if ip.assigned_object:
+                    if isinstance(ip.assigned_object, VirtualMachine):
+                        self.dst_content_type = ContentType.objects.get_for_model(VirtualMachine)
+                        self.dst_object_id = ip.assigned_object.pk
+                    elif isinstance(ip.assigned_object, Device):
+                        self.dst_content_type = ContentType.objects.get_for_model(Device)
+                        self.dst_object_id = ip.assigned_object.pk
+                else:
+                    # Link to IPAddress itself if no assignment
+                    self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
+                    self.dst_object_id = ip.pk
+            except IPAddress.DoesNotExist:
+                pass
+
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.src_ip}:{self.src_port} -> {self.dst_ip}:{self.dst_port} ({self.protocol})"
+        return f"{self.src_ip} -> {self.dst_ip} ({self.protocol}:{self.service_port})"
