@@ -7,17 +7,22 @@ from virtualization.models import VirtualMachine, VMInterface
 from dcim.models import Device, Interface
 
 class TrafficFlow(NetBoxModel):
-    src_ip = models.CharField(max_length=45)
-    dst_ip = models.CharField(max_length=45)
-    protocol = models.CharField(max_length=10)
-    service_port = models.IntegerField()
+    
     server_id = models.CharField(max_length=100)
+    
+    src_ip = models.CharField(max_length=45)
     src_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='src_traffic_flows', null=True, blank=True)
     src_object_id = models.PositiveIntegerField(null=True, blank=True)
     src_object = GenericForeignKey('src_content_type', 'src_object_id')
+    
+    dst_ip = models.CharField(max_length=45)
     dst_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='dst_traffic_flows', null=True, blank=True)
     dst_object_id = models.PositiveIntegerField(null=True, blank=True)
     dst_object = GenericForeignKey('dst_content_type', 'dst_object_id')
+    
+    protocol = models.CharField(max_length=10)
+    service_port = models.IntegerField()
+    
     timestamp = models.FloatField()
 
     class Meta:
