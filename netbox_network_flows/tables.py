@@ -3,6 +3,21 @@ from netbox.tables import NetBoxTable, columns
 import django_tables2 as tables
 from django.urls import reverse
 
+
+import django_tables2 as tables
+from netbox.tables import NetBoxTable
+from .models import ServiceEndpoints
+
+class ServiceEndpointTable(NetBoxTable):
+    application_name = tables.Column()
+    service_port = tables.Column()
+    process_name = tables.Column()
+
+    class Meta(NetBoxTable.Meta):
+        model = ServiceEndpoints
+        fields = ('id', 'application_name', 'service_port', 'process_name')
+        default_columns = ('application_name', 'service_port', 'process_name')
+        
 class TrafficFlowTable(NetBoxTable):
     timestamp = columns.DateTimeColumn()
     src_ip = tables.Column(verbose_name='Source IP')

@@ -6,6 +6,20 @@ from ipam.models import IPAddress
 from virtualization.models import VirtualMachine, VMInterface
 from dcim.models import Device, Interface
 
+class ServiceEndpoint(NetBoxModel):
+    application_name = models.CharField(max_length=100, help_text="Name of the application")
+    service_port = models.IntegerField(help_text="Primary service port")
+    process_name = models.CharField(max_length=100, blank=True, null=True, help_text="Name of the process running the service")
+    
+    class Meta:
+        verbose_name = "Service Endpoint"
+        verbose_name_plural = "Service Endpoints"
+        unique_together = ('application_name', 'service_port')  # Ensure uniqueness per app and port
+
+    def __str__(self):
+        return f"{self.application_name}:{self.service_port} ({self.process_name or 'unknown'})"
+
+
 class TrafficFlow(NetBoxModel):
     src_ip = models.CharField(max_length=45)
     dst_ip = models.CharField(max_length=45)

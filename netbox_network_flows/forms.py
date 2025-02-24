@@ -2,15 +2,21 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import DynamicModelChoiceField
-from .models import TrafficFlow
-from virtualization.models import VirtualMachine
+from .models import TrafficFlow, ServiceEndpoint
 from dcim.models import Device
 from ipam.models import IPAddress
 import logging
 
 logger = logging.getLogger(__name__)
 
-
+class ServiceEndpointForm(NetBoxModelForm):
+    class Meta:
+        model = ServiceEndpoint
+        fields = ('application_name', 'service_port', 'process_name')
+        widgets = {
+            'service_port': forms.NumberInput(attrs={'step': '1'}),
+        }
+        
 class TrafficFlowForm(NetBoxModelForm):
     src_content_type = forms.ChoiceField(
         choices=[],
