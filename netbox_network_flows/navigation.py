@@ -1,9 +1,10 @@
 from netbox.plugins import PluginMenuItem, PluginMenuButton, PluginMenu
 
 items = (
-    PluginMenuItem(
+
+        PluginMenuItem(
         link='plugins:netbox_network_flows:serviceendpoint_list',
-        link_text='Service Endpoints',
+        link_text='Flows',
         buttons=(
             PluginMenuButton(
                 link='plugins:netbox_network_flows:serviceendpoint_add',
@@ -20,9 +21,10 @@ items = (
         ),
         permissions=['netbox_network_flows.view_flow']
     ),
-        PluginMenuItem(
+        
+    PluginMenuItem(
         link='plugins:netbox_network_flows:serviceendpoint_list',
-        link_text='Flows',
+        link_text='Service Endpoints',
         buttons=(
             PluginMenuButton(
                 link='plugins:netbox_network_flows:serviceendpoint_add',
