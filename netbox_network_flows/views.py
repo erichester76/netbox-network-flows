@@ -62,25 +62,25 @@ class VirtualMachineFlowsView(generic.ObjectView):
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
-        # Prepare data for vis.js
         nodes = set()
         edges = []
         for flow in flows:
-            src_name = str(flow.src_object) if flow.src_object else flow.src_ip
-            dst_name = str(flow.dst_object) if flow.dst_object else flow.dst_ip
-            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else flow.src_ip
-            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else flow.dst_ip
-            nodes.add((src_id, src_name))
-            nodes.add((dst_id, dst_name))
+            src_name = str(flow.src_object) if flow.src_object else f"{flow.src_ip}"
+            dst_name = str(flow.dst_object) if flow.dst_object else f"{flow.dst_ip}"
+            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else f"{flow.src_ip}"
+            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else f"{flow.dst_ip}"
+            src_group = src_name if flow.src_object else 'unassigned'  # Group by src_object name
+            nodes.add((src_id, src_name, src_group))
+            nodes.add((dst_id, dst_name, src_group if flow.dst_object == flow.src_object else 'other'))
             edges.append({
                 'from': src_id,
                 'to': dst_id,
                 'label': f"{flow.protocol}:{flow.service_port}",
-                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'green'}
+                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'red'}
             })
 
         vis_data = {
-            'nodes': [{'id': nid, 'label': nlabel} for nid, nlabel in nodes],
+            'nodes': [{'id': nid, 'label': nlabel, 'group': grp} for nid, nlabel, grp in nodes],
             'edges': edges
         }
 
@@ -89,7 +89,6 @@ class VirtualMachineFlowsView(generic.ObjectView):
             'vis_data': json.dumps(vis_data),
         }
 
-# Similar changes for DeviceFlowsView...
 @register_model_view(Device, 'flows', path='flows')
 class DeviceFlowsView(generic.ObjectView):
     queryset = Device.objects.all()
@@ -115,21 +114,22 @@ class DeviceFlowsView(generic.ObjectView):
         nodes = set()
         edges = []
         for flow in flows:
-            src_name = str(flow.src_object) if flow.src_object else flow.src_ip
-            dst_name = str(flow.dst_object) if flow.dst_object else flow.dst_ip
-            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else flow.src_ip
-            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else flow.dst_ip
-            nodes.add((src_id, src_name))
-            nodes.add((dst_id, dst_name))
+            src_name = str(flow.src_object) if flow.src_object else f"{flow.src_ip}"
+            dst_name = str(flow.dst_object) if flow.dst_object else f"{flow.dst_ip}"
+            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else f"{flow.src_ip}"
+            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else f"{flow.dst_ip}"
+            src_group = src_name if flow.src_object else 'unassigned'  # Group by src_object name
+            nodes.add((src_id, src_name, src_group))
+            nodes.add((dst_id, dst_name, src_group if flow.dst_object == flow.src_object else 'other'))
             edges.append({
                 'from': src_id,
                 'to': dst_id,
                 'label': f"{flow.protocol}:{flow.service_port}",
-                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'green'}
+                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'red'}
             })
 
         vis_data = {
-            'nodes': [{'id': nid, 'label': nlabel} for nid, nlabel in nodes],
+            'nodes': [{'id': nid, 'label': nlabel, 'group': grp} for nid, nlabel, grp in nodes],
             'edges': edges
         }
 
@@ -137,4 +137,3 @@ class DeviceFlowsView(generic.ObjectView):
             'flows_table': flows_table,
             'vis_data': json.dumps(vis_data),
         }
-
