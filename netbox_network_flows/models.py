@@ -25,6 +25,7 @@ class TrafficFlow(NetBoxModel):
     dst_ip = models.CharField(max_length=45)
     protocol = models.CharField(max_length=10)
     service_port = models.IntegerField()
+    
     server_id = models.CharField(max_length=100)
     src_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='src_traffic_flows', null=True, blank=True)
     src_object_id = models.PositiveIntegerField(null=True, blank=True)
@@ -33,7 +34,8 @@ class TrafficFlow(NetBoxModel):
     dst_object_id = models.PositiveIntegerField(null=True, blank=True)
     dst_object = GenericForeignKey('dst_content_type', 'dst_object_id')
     timestamp = models.FloatField()
-
+    service_endpoint = models.ForeignKey(ServiceEndpoint, on_delete=models.SET_NULL, null=True, blank=True, related_name='flows', help_text="Associated service endpoint")
+    
     class Meta:
         unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')
 
@@ -75,7 +77,14 @@ class TrafficFlow(NetBoxModel):
                 else:
                     self.dst_content_type = ContentType.objects.get_for_model(IPAddress)
                     self.dst_object_id = ip.pk
-
+                    
+        if self.service_port:
+            service_endpoint, _ = ServiceEndpoint.objects.get_or_create(
+                service_port=self.service_port,
+                defaults={'application_name': f"Unknown_{self.service_port}"}
+            )
+            self.service_endpoint = service_endpoint
+            
         super().save(*args, **kwargs)
 
     def __str__(self):

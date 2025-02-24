@@ -3,17 +3,17 @@ from netbox.plugins import PluginMenuItem, PluginMenuButton, PluginMenu
 items = (
 
         PluginMenuItem(
-        link='plugins:netbox_network_flows:serviceendpoint_list',
+        link='plugins:netbox_network_flows:flow_list',
         link_text='Flows',
         buttons=(
             PluginMenuButton(
-                link='plugins:netbox_network_flows:serviceendpoint_add',
+                link='plugins:netbox_network_flows:flow_add',
                 title='Add',
                 icon_class='mdi mdi-plus-thick',
                 permissions=['netbox_network_flows.add_flow']
             ),
             PluginMenuButton(
-                link='plugins:netbox_network_flows:serviceendpoint_import',
+                link='plugins:netbox_network_flows:flow_import',
                 title='Import',
                 icon_class='mdi mdi-upload',
                 permissions=['netbox_network_flows.add_flow']
@@ -30,16 +30,16 @@ items = (
                 link='plugins:netbox_network_flows:serviceendpoint_add',
                 title='Add',
                 icon_class='mdi mdi-plus-thick',
-                permissions=['netbox_network_flows.add_flow']
+                permissions=['netbox_network_flows.add_serviceendpoint']
             ),
             PluginMenuButton(
                 link='plugins:netbox_network_flows:serviceendpoint_import',
                 title='Import',
                 icon_class='mdi mdi-upload',
-                permissions=['netbox_network_flows.add_flow']
+                permissions=['netbox_network_flows.add_serviceendpoint']
             ),
         ),
-        permissions=['netbox_network_flows.view_flow']
+        permissions=['netbox_network_flows.view_service_endpoint']
     ),
 )
 
