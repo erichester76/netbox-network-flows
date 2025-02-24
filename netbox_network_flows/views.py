@@ -10,7 +10,7 @@ from django.db import models
 import json
 
 class ServiceEndpointListView(generic.ObjectListView):
-    queryset = models.ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all()
     table = ServiceEndpointTable
     actions = {
         'add': {'add': True},
@@ -19,27 +19,27 @@ class ServiceEndpointListView(generic.ObjectListView):
     }
 
 class ServiceEndpointEditView(generic.ObjectEditView):
-    queryset = models.ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all()
     form = ServiceEndpointForm
     default_return_url = 'netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointDeleteView(generic.ObjectDeleteView):
-    queryset = models.ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all()
     default_return_url = 'netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointBulkEditView(generic.BulkEditView):
-    queryset = models.ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all()
     default_return_url = 'netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointBulkDeleteView(generic.BulkDeleteView):
-    queryset = models.ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all()
     default_return_url = 'netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointImportView(generic.BulkImportView):
     queryset = ServiceEndpoint.objects.all()
 
 class ServiceEndpointChangelogView(generic.ObjectChangeLogView):
-    queryset = models.ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all()
 
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
