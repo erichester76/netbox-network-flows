@@ -65,23 +65,10 @@
     var edgeColor = isDarkMode ? { inherit: false, color: '#a0a0a0', opacity: 0.5 } : { inherit: false, color: '#666', opacity: 0.5 };
 
     var options = {
-      physics: {
-        enabled: true,
-        forceAtlas2Based: {
-          gravitationalConstant: -3000,  // Stronger repulsion to spread nodes further
-          centralGravity: 0.0005,       // Minimal central pull for wide distribution
-          springLength: 200,            // Longer edges for better spacing
-          springConstant: 0.01,         // Very weak springs for flexibility
-          avoidOverlap: 2.0,            // Aggressive overlap avoidance
-          damping: 0.95                 // Slightly slower movement for stability
-        },
-        solver: 'forceAtlas2Based',
-        stabilization: {
-          enabled: true,
-          iterations: 3000,             // More iterations for stable layout
-          updateInterval: 25
-        }
+      layout: {
+         hierarchical: { direction: 'LR', levelSeparation: 150, nodeSpacing: 100 }
       },
+      physics: { enabled: false },
       edges: {
         arrows: 'to',
         smooth: { type: 'curvedCW', roundness: 0.7 },  // Smoother, less overlapping curves
