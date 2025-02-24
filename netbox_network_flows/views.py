@@ -76,7 +76,7 @@ class VirtualMachineFlowsView(generic.ObjectView):
                 'from': src_id,
                 'to': dst_id,
                 'label': f"{flow.protocol}:{flow.service_port}",
-                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'red'}
+                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'green'}
             })
 
         vis_data = {
@@ -125,7 +125,7 @@ class DeviceFlowsView(generic.ObjectView):
                 'from': src_id,
                 'to': dst_id,
                 'label': f"{flow.protocol}:{flow.service_port}",
-                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'red'}
+                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'green'}
             })
 
         vis_data = {
