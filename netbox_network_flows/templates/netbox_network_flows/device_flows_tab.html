@@ -65,21 +65,40 @@
     var edgeColor = isDarkMode ? { inherit: false, color: '#a0a0a0', opacity: 0.5 } : { inherit: false, color: '#666', opacity: 0.5 };
 
     var options = {
-      layout: {
-         hierarchical: { direction: 'LR', levelSeparation: 150, nodeSpacing: 100 }
+      physics: {
+        enabled: true,
+        forceAtlas2Based: {
+          gravitationalConstant: -4000,  // Very strong repulsion for wide spread
+          centralGravity: 0.0001,       // Minimal central pull for fan-out
+          springLength: 300,            // Long edges for radial spread
+          springConstant: 0.005,        // Very weak springs for flexibility
+          avoidOverlap: 2.5,            // Aggressive overlap avoidance
+          damping: 0.95                 // Slow movement for stability
+        },
+        solver: 'forceAtlas2Based',
+        stabilization: {
+          enabled: true,
+          iterations: 4000,             // More iterations for stable layout
+          updateInterval: 25
+        }
       },
-      physics: { enabled: false },
+      layout: {
+        randomSeed: 2,               // Consistent initial layout for reproducibility
+        improvedLayout: true         // Optimize initial positioning
+      },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW', roundness: 0.7 },  // Smoother, less overlapping curves
-        width: 0.8,                                     // Even thinner edges
-        color: edgeColor                                // Dynamic color based on theme
+        smooth: { type: 'curvedCW', roundness: 0.8 },  // Smoother, longer curves for separation
+        width: 0.6,                                     // Thinner edges to reduce clutter
+        color: edgeColor,                               // Dynamic color based on theme
+        physics: false                                  // Disable physics on edges for control
       },
       nodes: {
         shape: 'dot',
-        size: 12,                                       // Smaller nodes to reduce overlap
+        size: 12,                                       // Smaller nodes for compactness
         font: { size: 10, face: 'Arial', align: 'center' },  // Smaller, clearer labels
-        color: nodeColor                                // Dynamic color based on theme
+        color: nodeColor,                               // Dynamic color based on theme
+        physics: true                                   // Enable physics on nodes for repulsion
       },
       interaction: {
         zoomView: true,
@@ -89,9 +108,10 @@
         hideEdgesOnDrag: true
       },
       clusters: {
-        maxNodeCount: 20,                               // Larger clusters for dense graphs
-        clusterEdgeThreshold: 10,                       // More aggressive clustering
-        clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7'  // Dynamic cluster color
+        maxNodeCount: 25,                               // Larger clusters for dense graphs
+        clusterEdgeThreshold: 15,                       // More aggressive clustering by edge count
+        clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7',  // Dynamic cluster color
+        clusterFontColor: isDarkMode ? '#ffffff' : '#000000'  // Readable cluster labels
       }
     };
     var network = new vis.Network(container, data, options);
@@ -101,7 +121,7 @@
       network.setOptions({ physics: false });  // Lock layout after stabilization
     });
 
-    // Optional: Handle theme changes dynamically (e.g., with NetBox theme toggle)
+    // Handle theme changes dynamically
     const observer = new MutationObserver((mutations) => {
       mutations.forEach(mutation => {
         if (mutation.attributeName === 'class') {
@@ -112,7 +132,7 @@
           network.setOptions({
             nodes: { color: nodeColor },
             edges: { color: edgeColor },
-            clusters: { clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7' }
+            clusters: { clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7', clusterFontColor: isDarkMode ? '#ffffff' : '#000000' }
           });
         }
       });
