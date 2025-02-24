@@ -10,8 +10,7 @@
       </div>
       <div class="card-body">
         {% if flows_table %}
-          {% render_table flows_table %}
-          <h6>Flow Diagram</h6>
+         
           <div id="flow-network" style="height: 500px;"></div>
         {% else %}
           <p>No traffic flows found for this virtual machine.</p>
