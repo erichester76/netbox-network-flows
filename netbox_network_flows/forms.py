@@ -26,14 +26,14 @@ class TrafficFlowForm(NetBoxModelForm):
     )
     
     src_object = DynamicModelChoiceField(
-        queryset=VirtualMachine.objects.none(),  # Start with empty, filter dynamically
+        queryset=VirtualMachine.objects.none(), 
         required=False,
         label='Source Object',
         null_option='None',
         query_params={'content_type_id': '$src_content_type'}
     )
     dst_object = DynamicModelChoiceField(
-        queryset=VirtualMachine.objects.none(),  # Start with empty, filter dynamically
+        queryset=VirtualMachine.objects.none(), 
         required=False,
         label='Destination Object',
         null_option='None',
