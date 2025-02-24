@@ -4,9 +4,6 @@ import django_tables2 as tables
 from django.urls import reverse
 
 class ServiceEndpointTable(NetBoxTable):
-    application_name = tables.Column()
-    service_port = tables.Column()
-    process_name = tables.Column()
 
     class Meta(NetBoxTable.Meta):
         model = ServiceEndpoint
