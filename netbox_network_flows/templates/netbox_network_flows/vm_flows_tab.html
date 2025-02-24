@@ -37,7 +37,7 @@
             </h2>
             <div id="collapseDiagram" class="accordion-collapse collapse show" aria-labelledby="headingDiagram" data-bs-parent="#flowsAccordion">
               <div class="accordion-body">
-                <div id="flow-network" style="height: 800px;"></div> <!-- Increased height for visibility -->
+                <div id="flow-network" style="height: 800px;"></div>
               </div>
             </div>
           </div>
@@ -58,54 +58,79 @@
     var container = document.getElementById('flow-network');
     var rawData = document.getElementById('vis-data').textContent;
     var data = JSON.parse(rawData);
+    
+    // Detect NetBox theme (light or dark) dynamically
+    var isDarkMode = document.body.classList.contains('dark-mode') || document.body.classList.contains('theme-dark');
+    var nodeColor = isDarkMode ? { background: '#4a90e2', border: '#1e5ea7', hover: { background: '#6ab0ff' } } : { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } };
+    var edgeColor = isDarkMode ? { inherit: false, color: '#a0a0a0', opacity: 0.5 } : { inherit: false, color: '#666', opacity: 0.5 };
+
     var options = {
       physics: {
         enabled: true,
         forceAtlas2Based: {
-          gravitationalConstant: -2000,  // Stronger repulsion to spread nodes
-          centralGravity: 0.001,        // Very weak central pull for distribution
-          springLength: 150,            // Longer edges for better spacing
-          springConstant: 0.02,         // Weaker springs for flexibility
-          avoidOverlap: 1.5,            // Stronger overlap avoidance
-          damping: 0.9                  // Slow movement for stability
+          gravitationalConstant: -3000,  // Stronger repulsion to spread nodes further
+          centralGravity: 0.0005,       // Minimal central pull for wide distribution
+          springLength: 200,            // Longer edges for better spacing
+          springConstant: 0.01,         // Very weak springs for flexibility
+          avoidOverlap: 2.0,            // Aggressive overlap avoidance
+          damping: 0.95                 // Slightly slower movement for stability
         },
         solver: 'forceAtlas2Based',
         stabilization: {
           enabled: true,
-          iterations: 2000,            // More iterations for stable layout
+          iterations: 3000,             // More iterations for stable layout
           updateInterval: 25
         }
       },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW', roundness: 0.5 },  // Smoother, less overlapping curves
-        width: 1,                                     // Thinner edges to reduce clutter
-        color: { inherit: false, opacity: 0.5 }       // Faint edges for readability
+        smooth: { type: 'curvedCW', roundness: 0.7 },  // Smoother, less overlapping curves
+        width: 0.8,                                     // Even thinner edges
+        color: edgeColor                                // Dynamic color based on theme
       },
       nodes: {
         shape: 'dot',
-        size: 15,                                     // Smaller nodes to reduce overlap
-        font: { size: 12, face: 'Arial', align: 'center' },  // Smaller, clearer labels
-        color: { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } }
+        size: 12,                                       // Smaller nodes to reduce overlap
+        font: { size: 10, face: 'Arial', align: 'center' },  // Smaller, clearer labels
+        color: nodeColor                                // Dynamic color based on theme
       },
       interaction: {
         zoomView: true,
         dragView: true,
         hover: true,
-        tooltipDelay: 100,                            // Quick tooltips for details
-        hideEdgesOnDrag: true                         // Hide edges while dragging
+        tooltipDelay: 100,
+        hideEdgesOnDrag: true
       },
       clusters: {
-        maxNodeCount: 10,                             // Auto-cluster small groups
-        clusterEdgeThreshold: 5                       // Cluster edges with many connections
+        maxNodeCount: 20,                               // Larger clusters for dense graphs
+        clusterEdgeThreshold: 10,                       // More aggressive clustering
+        clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7'  // Dynamic cluster color
       }
     };
     var network = new vis.Network(container, data, options);
 
-    // Optional: Stabilize layout on load
+    // Stabilize layout and lock physics
     network.on('stabilizationIterationsDone', function () {
       network.setOptions({ physics: false });  // Lock layout after stabilization
     });
+
+    // Optional: Handle theme changes dynamically (e.g., with NetBox theme toggle)
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          isDarkMode = document.body.classList.contains('dark-mode') || document.body.classList.contains('theme-dark');
+          nodeColor = isDarkMode ? { background: '#4a90e2', border: '#1e5ea7', hover: { background: '#6ab0ff' } } : { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } };
+          edgeColor = isDarkMode ? { inherit: false, color: '#a0a0a0', opacity: 0.5 } : { inherit: false, color: '#666', opacity: 0.5 };
+          
+          network.setOptions({
+            nodes: { color: nodeColor },
+            edges: { color: edgeColor },
+            clusters: { clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7' }
+          });
+        }
+      });
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   });
 </script>
 {% endblock %}
