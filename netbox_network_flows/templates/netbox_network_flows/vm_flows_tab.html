@@ -58,47 +58,35 @@
     var container = document.getElementById('flow-network');
     var rawData = document.getElementById('vis-data').textContent;
     var data = JSON.parse(rawData);
-    
-    // Detect NetBox theme (light or dark) dynamically
-    var isDarkMode = document.body.classList.contains('dark-mode') || document.body.classList.contains('theme-dark');
-    var nodeColor = isDarkMode ? { background: '#4a90e2', border: '#1e5ea7', hover: { background: '#6ab0ff' } } : { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } };
-    var edgeColor = isDarkMode ? { inherit: false, color: '#a0a0a0', opacity: 0.5 } : { inherit: false, color: '#666', opacity: 0.5 };
-
     var options = {
       physics: {
         enabled: true,
         forceAtlas2Based: {
-          gravitationalConstant: -4000,  // Very strong repulsion for wide spread
-          centralGravity: 0.0001,       // Minimal central pull for fan-out
-          springLength: 300,            // Long edges for radial spread
-          springConstant: 0.005,        // Very weak springs for flexibility
-          avoidOverlap: 2.5,            // Aggressive overlap avoidance
-          damping: 0.95                 // Slow movement for stability
+          gravitationalConstant: -2000,
+          centralGravity: 0.001,
+          springLength: 150,
+          springConstant: 0.02,
+          avoidOverlap: 1.5,
+          damping: 0.9
         },
         solver: 'forceAtlas2Based',
         stabilization: {
           enabled: true,
-          iterations: 4000,             // More iterations for stable layout
+          iterations: 2000,
           updateInterval: 25
         }
       },
-      layout: {
-        randomSeed: 2,               // Consistent initial layout for reproducibility
-        improvedLayout: true         // Optimize initial positioning
-      },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW', roundness: 0.8 },  // Smoother, longer curves for separation
-        width: 0.6,                                     // Thinner edges to reduce clutter
-        color: edgeColor,                               // Dynamic color based on theme
-        physics: false                                  // Disable physics on edges for control
+        smooth: { type: 'curvedCW', roundness: 0.5 },
+        width: 0.8,
+        color: { inherit: false, opacity: 0.5 }
       },
       nodes: {
         shape: 'dot',
-        size: 12,                                       // Smaller nodes for compactness
-        font: { size: 10, face: 'Arial', align: 'center' },  // Smaller, clearer labels
-        color: nodeColor,                               // Dynamic color based on theme
-        physics: true                                   // Enable physics on nodes for repulsion
+        size: 12,
+        font: { size: 10, face: 'Arial', align: 'center' },
+        color: { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } }
       },
       interaction: {
         zoomView: true,
@@ -106,38 +94,14 @@
         hover: true,
         tooltipDelay: 100,
         hideEdgesOnDrag: true
-      },
-      clusters: {
-        maxNodeCount: 25,                               // Larger clusters for dense graphs
-        clusterEdgeThreshold: 15,                       // More aggressive clustering by edge count
-        clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7',  // Dynamic cluster color
-        clusterFontColor: isDarkMode ? '#ffffff' : '#000000'  // Readable cluster labels
       }
     };
     var network = new vis.Network(container, data, options);
 
     // Stabilize layout and lock physics
     network.on('stabilizationIterationsDone', function () {
-      network.setOptions({ physics: false });  // Lock layout after stabilization
+      network.setOptions({ physics: false });
     });
-
-    // Handle theme changes dynamically
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.attributeName === 'class') {
-          isDarkMode = document.body.classList.contains('dark-mode') || document.body.classList.contains('theme-dark');
-          nodeColor = isDarkMode ? { background: '#4a90e2', border: '#1e5ea7', hover: { background: '#6ab0ff' } } : { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } };
-          edgeColor = isDarkMode ? { inherit: false, color: '#a0a0a0', opacity: 0.5 } : { inherit: false, color: '#666', opacity: 0.5 };
-          
-          network.setOptions({
-            nodes: { color: nodeColor },
-            edges: { color: edgeColor },
-            clusters: { clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7', clusterFontColor: isDarkMode ? '#ffffff' : '#000000' }
-          });
-        }
-      });
-    });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   });
 </script>
 {% endblock %}
