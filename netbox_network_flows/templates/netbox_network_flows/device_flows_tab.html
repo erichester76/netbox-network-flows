@@ -11,7 +11,6 @@
       </div>
       <div class="card-body">
         {% if flows %}
-          {% render_table flows %}
           <h6>Mermaid Flow Diagram</h6>
           <div class="mermaid">
             {{ mermaid_code|safe }}
