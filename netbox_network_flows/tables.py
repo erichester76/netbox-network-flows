@@ -1,12 +1,7 @@
-from .models import TrafficFlow
+from .models import TrafficFlow, ServiceEndpoint
 from netbox.tables import NetBoxTable, columns
 import django_tables2 as tables
 from django.urls import reverse
-
-
-import django_tables2 as tables
-from netbox.tables import NetBoxTable
-from .models import ServiceEndpoints
 
 class ServiceEndpointTable(NetBoxTable):
     application_name = tables.Column()
@@ -14,7 +9,7 @@ class ServiceEndpointTable(NetBoxTable):
     process_name = tables.Column()
 
     class Meta(NetBoxTable.Meta):
-        model = ServiceEndpoints
+        model = ServiceEndpoint
         fields = ('id', 'application_name', 'service_port', 'process_name')
         default_columns = ('application_name', 'service_port', 'process_name')
         
