@@ -1,5 +1,6 @@
 {% extends 'generic/object.html' %}
 {% load render_table from django_tables2 %}
+{% load static %}
 
 {% block content %}
 <div class="row">
@@ -9,8 +10,7 @@
         <h5>Traffic Flows</h5>
       </div>
       <div class="card-body">
-        {% if flows_table %}
-          {% render_table flows_table %}
+        {% if flows %}
           <h6>Mermaid Flow Diagram</h6>
           <div class="mermaid">
             {{ mermaid_code|safe }}
