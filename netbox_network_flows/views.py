@@ -31,9 +31,16 @@ class TrafficFlowDeleteView(generic.ObjectDeleteView):
     template_name = 'netbox_network_flows/flow_delete.html'
     default_return_url = 'netbox_network_flows:flow_list'
 
-class TrafficFlowImportView(generic.ObjectView):
+class TrafficFlowImportView(generic.BulkImportView):
     queryset = TrafficFlow.objects.all()
-    template_name = 'netbox_network_flows/flow_import.html'
+
+
+class TrafficFlowBulkEditView(generic.BulkEditView):
+    queryset = TrafficFlow.objects.all()
+
+class TrafficFlowBulkDeleteView(generic.BulkDeleteView):
+    queryset = TrafficFlow.objects.all()
+
 
 @register_model_view(VirtualMachine, 'flows', path='flows')
 class VirtualMachineFlowsView(generic.ObjectView):
