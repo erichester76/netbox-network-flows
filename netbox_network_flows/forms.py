@@ -98,4 +98,3 @@ class TrafficFlowForm(NetBoxModelForm):
             return cleaned_data
         except Exception as e:
             raise
-
