@@ -34,14 +34,15 @@ class TrafficFlowDeleteView(generic.ObjectDeleteView):
 class TrafficFlowImportView(generic.BulkImportView):
     queryset = TrafficFlow.objects.all()
 
-
 class TrafficFlowBulkEditView(generic.BulkEditView):
     queryset = TrafficFlow.objects.all()
 
 class TrafficFlowBulkDeleteView(generic.BulkDeleteView):
     queryset = TrafficFlow.objects.all()
 
-
+class TrafficFlowChangelogView(generic.ObjectChangeLogView):
+    queryset = TrafficFlow.objects.all()
+    
 @register_model_view(VirtualMachine, 'flows', path='flows')
 class VirtualMachineFlowsView(generic.ObjectView):
     queryset = VirtualMachine.objects.all()
