@@ -66,12 +66,11 @@
 
     var options = {
       layout: {
-         hierarchical: { direction: 'LR', levelSeparation: 150, nodeSpacing: 100 }
+         hierarchical: { direction: 'LR', levelSeparation: 150, nodeSpacing: 200 }
       },
       physics: { enabled: false },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW', roundness: 0.7 },  // Smoother, less overlapping curves
         width: 0.8,                                     // Even thinner edges
         color: edgeColor                                // Dynamic color based on theme
       },
@@ -89,7 +88,7 @@
         hideEdgesOnDrag: true
       },
       clusters: {
-        maxNodeCount: 20,                               // Larger clusters for dense graphs
+        maxNodeCount: 10,                               // Larger clusters for dense graphs
         clusterEdgeThreshold: 10,                       // More aggressive clustering
         clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7'  // Dynamic cluster color
       }
