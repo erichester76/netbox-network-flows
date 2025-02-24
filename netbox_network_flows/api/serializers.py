@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import TrafficFlow
+from netbox_network_flows.models import TrafficFlow
 from django.contrib.contenttypes.models import ContentType
 
 class TrafficFlowSerializer(serializers.ModelSerializer):

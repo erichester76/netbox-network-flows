@@ -11,11 +11,22 @@
       <div class="card-body">
         {% if flows_table %}
           {% render_table flows_table %}
+          <h6>Mermaid Flow Diagram</h6>
+          <div class="mermaid">
+            {{ mermaid_code|safe }}
+          </div>
         {% else %}
-          <p>No traffic flows found for this [virtual machine/device].</p>
+          <p>No traffic flows found for this device.</p>
         {% endif %}
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true });
+</script>
 {% endblock %}
