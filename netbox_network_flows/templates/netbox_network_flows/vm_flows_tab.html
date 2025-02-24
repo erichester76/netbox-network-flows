@@ -10,7 +10,9 @@
       </div>
       <div class="card-body">
         {% if flows_table %}
-         <div id="flow-network" style="height: 600px;"></div>
+          {% render_table flows_table %}
+          <h6>Flow Diagram</h6>
+          <div id="flow-network" style="height: 600px;"></div>
         {% else %}
           <p>No traffic flows found for this virtual machine.</p>
         {% endif %}
@@ -30,6 +32,30 @@
     var container = document.getElementById('flow-network');
     var rawData = document.getElementById('vis-data').textContent;
     var data = JSON.parse(rawData);
+    var options = {
+      layout: {
+        hierarchical: {
+          direction: 'LR',
+          sortMethod: 'directed',
+          levelSeparation: 200,
+          nodeSpacing: 150
+        }
+      },
+      physics: { enabled: false },
+      edges: {
+        arrows: 'to',
+        smooth: { type: 'curvedCW' }
+      },
+      nodes: {
+        shape: 'dot',
+        size: 20
+      },
+      interaction: {
+        zoomView: true,
+        dragView: true,
+        hover: true
+      }
+    };
     var network = new vis.Network(container, data, options);
   });
 </script>
