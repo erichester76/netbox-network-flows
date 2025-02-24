@@ -22,6 +22,7 @@ class TrafficFlowListView(generic.ObjectListView):
 class TrafficFlowEditView(generic.ObjectEditView):
     queryset = TrafficFlow.objects.all()
     form = TrafficFlowForm
+    default_return_url = 'netbox_network_flows:flow_list'
 
 class TrafficFlowDeleteView(generic.ObjectDeleteView):
     queryset = TrafficFlow.objects.all()
@@ -29,12 +30,15 @@ class TrafficFlowDeleteView(generic.ObjectDeleteView):
 
 class TrafficFlowImportView(generic.BulkImportView):
     queryset = TrafficFlow.objects.all()
+    default_return_url = 'netbox_network_flows:flow_list'
 
 class TrafficFlowBulkEditView(generic.BulkEditView):
     queryset = TrafficFlow.objects.all()
-    
+    default_return_url = 'netbox_network_flows:flow_list'
+
 class TrafficFlowBulkDeleteView(generic.BulkDeleteView):
     queryset = TrafficFlow.objects.all()
+    default_return_url = 'netbox_network_flows:flow_list'
     
 class TrafficFlowChangelogView(generic.ObjectChangeLogView):
     queryset = TrafficFlow.objects.all()
@@ -57,14 +61,13 @@ class VirtualMachineFlowsView(generic.ObjectView):
         flows = TrafficFlow.objects.filter(
             models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
             models.Q(dst_content_type=vm_ct, dst_object_id=instance.pk)
-        )
+        ).prefetch_related('src_content_type', 'dst_content_type')
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
         mermaid_code = "graph TD\n"
         nodes = set()
         edges = []
-        # Group flows by src_content_type and src_object_id
         src_groups = defaultdict(list)
         for flow in flows:
             group_key = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_content_type_id and flow.src_object_id else "unassigned"
@@ -115,14 +118,13 @@ class DeviceFlowsView(generic.ObjectView):
         flows = TrafficFlow.objects.filter(
             models.Q(src_content_type=device_ct, src_object_id=instance.pk) |
             models.Q(dst_content_type=device_ct, dst_object_id=instance.pk)
-        )
+        ).prefetch_related('src_content_type', 'dst_content_type')
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
         mermaid_code = "graph TD\n"
         nodes = set()
         edges = []
-        # Group flows by src_content_type and src_object_id
         src_groups = defaultdict(list)
         for flow in flows:
             group_key = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_content_type_id and flow.src_object_id else "unassigned"
