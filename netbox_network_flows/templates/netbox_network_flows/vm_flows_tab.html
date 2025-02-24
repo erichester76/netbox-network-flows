@@ -59,14 +59,29 @@
     var rawData = document.getElementById('vis-data').textContent;
     var data = JSON.parse(rawData);
     var options = {
-      physics: { enabled: false },
+      physics: {
+        enabled: true,
+        forceAtlas2Based: {
+          gravitationalConstant: -100,  // Strong repulsion between nodes
+          centralGravity: 0.01,        // Weak central pull to keep compact
+          springLength: 100,           // Ideal edge length
+          springConstant: 0.05,        // Edge stiffness
+          avoidOverlap: 1.0            // Maximize overlap avoidance
+        },
+        solver: 'forceAtlas2Based',
+        stabilization: {
+          enabled: true,
+          iterations: 1000           // Ensure stable layout
+        }
+      },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW' }
+        smooth: { type: 'curvedCW' }  // Curved edges for readability
       },
       nodes: {
         shape: 'dot',
-        size: 25
+        size: 20,
+        font: { size: 14 }
       },
       interaction: {
         zoomView: true,
