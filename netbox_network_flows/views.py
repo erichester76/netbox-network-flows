@@ -103,10 +103,10 @@ class DeviceFlowsView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        device_ct = ContentType.objects.get_for_model(Device)
+        vm_ct = ContentType.objects.get_for_model(VirtualMachine)
         flows = TrafficFlow.objects.filter(
-            models.Q(src_content_type=device_ct, src_object_id=instance.pk) |
-            models.Q(dst_content_type=device_ct, dst_object_id=instance.pk)
+            models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
+            models.Q(dst_content_type=vm_ct, dst_object_id=instance.pk)
         ).prefetch_related('src_content_type', 'dst_content_type')
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
