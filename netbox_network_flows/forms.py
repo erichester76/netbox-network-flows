@@ -5,6 +5,7 @@ from utilities.forms.fields import DynamicModelChoiceField
 from .models import TrafficFlow, ServiceEndpoint
 from dcim.models import Device
 from ipam.models import IPAddress
+from virtualization.models import VirtualMachine
 import logging
 
 logger = logging.getLogger(__name__)
