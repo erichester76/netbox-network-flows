@@ -11,34 +11,7 @@
       </div>
       <div class="card-body">
         {% if flows %}
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Source IP</th>
-                <th>Source Object</th>
-                <th>Destination IP</th>
-                <th>Destination Object</th>
-                <th>Protocol</th>
-                <th>Service Port</th>
-                <th>Server ID</th>
-                <th>Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for flow in flows %}
-                <tr>
-                  <td>{{ flow.src_ip }}</td>
-                  <td>{{ flow.src_object|default:"-" }}</td>
-                  <td>{{ flow.dst_ip }}</td>
-                  <td>{{ flow.dst_object|default:"-" }}</td>
-                  <td>{{ flow.protocol }}</td>
-                  <td>{{ flow.service_port }}</td>
-                  <td>{{ flow.server_id }}</td>
-                  <td>{{ flow.timestamp }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          {% render_table flows %}
           <h6>Mermaid Flow Diagram</h6>
           <div class="mermaid">
             {{ mermaid_code|safe }}
