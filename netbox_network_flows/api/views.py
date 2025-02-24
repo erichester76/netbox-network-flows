@@ -39,6 +39,6 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
         else:
             serializer.save()
 
-class ServiceEndpointsViewSet(viewsets.ModelViewSet):
+class ServiceEndpointViewSet(viewsets.ModelViewSet):
     queryset = ServiceEndpoint.objects.all()
     serializer_class = ServiceEndpointsSerializer
