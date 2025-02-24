@@ -4,7 +4,7 @@ class NetworkFlowsConfig(PluginConfig):
     name = 'netbox_network_flows'
     verbose_name = 'Traffic Flows'
     description = 'Manage network traffic flows between servers'
-    version = '0.1'
+    version = '0.1.1'
     author = 'Eric Hester'
     author_email = 'hester1@clemson.edu'
     base_url = 'flows'
