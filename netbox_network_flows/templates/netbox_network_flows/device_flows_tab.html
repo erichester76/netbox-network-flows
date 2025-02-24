@@ -37,7 +37,7 @@
             </h2>
             <div id="collapseDiagram" class="accordion-collapse collapse show" aria-labelledby="headingDiagram" data-bs-parent="#flowsAccordion">
               <div class="accordion-body">
-                <div id="flow-network" style="height: 600px;"></div>
+                <div id="flow-network" style="height: 800px;"></div> <!-- Increased height for visibility -->
               </div>
             </div>
           </div>
@@ -59,22 +59,53 @@
     var rawData = document.getElementById('vis-data').textContent;
     var data = JSON.parse(rawData);
     var options = {
-      physics: { enabled: false },
+      physics: {
+        enabled: true,
+        forceAtlas2Based: {
+          gravitationalConstant: -2000,  // Stronger repulsion to spread nodes
+          centralGravity: 0.001,        // Very weak central pull for distribution
+          springLength: 150,            // Longer edges for better spacing
+          springConstant: 0.02,         // Weaker springs for flexibility
+          avoidOverlap: 1.5,            // Stronger overlap avoidance
+          damping: 0.9                  // Slow movement for stability
+        },
+        solver: 'forceAtlas2Based',
+        stabilization: {
+          enabled: true,
+          iterations: 2000,            // More iterations for stable layout
+          updateInterval: 25
+        }
+      },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW' }
+        smooth: { type: 'curvedCW', roundness: 0.5 },  // Smoother, less overlapping curves
+        width: 1,                                     // Thinner edges to reduce clutter
+        color: { inherit: false, opacity: 0.5 }       // Faint edges for readability
       },
       nodes: {
         shape: 'dot',
-        size: 25
+        size: 15,                                     // Smaller nodes to reduce overlap
+        font: { size: 12, face: 'Arial', align: 'center' },  // Smaller, clearer labels
+        color: { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } }
       },
       interaction: {
         zoomView: true,
         dragView: true,
-        hover: true
+        hover: true,
+        tooltipDelay: 100,                            // Quick tooltips for details
+        hideEdgesOnDrag: true                         // Hide edges while dragging
+      },
+      clusters: {
+        maxNodeCount: 10,                             // Auto-cluster small groups
+        clusterEdgeThreshold: 5                       // Cluster edges with many connections
       }
     };
     var network = new vis.Network(container, data, options);
+
+    // Optional: Stabilize layout on load
+    network.on('stabilizationIterationsDone', function () {
+      network.setOptions({ physics: false });  // Lock layout after stabilization
+    });
   });
 </script>
 {% endblock %}

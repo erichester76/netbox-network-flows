@@ -37,7 +37,7 @@
             </h2>
             <div id="collapseDiagram" class="accordion-collapse collapse show" aria-labelledby="headingDiagram" data-bs-parent="#flowsAccordion">
               <div class="accordion-body">
-                <div id="flow-network" style="height: 600px;"></div>
+                <div id="flow-network" style="height: 800px;"></div> <!-- Increased height for visibility -->
               </div>
             </div>
           </div>
@@ -62,34 +62,50 @@
       physics: {
         enabled: true,
         forceAtlas2Based: {
-          gravitationalConstant: -100,  // Strong repulsion between nodes
-          centralGravity: 0.01,        // Weak central pull to keep compact
-          springLength: 100,           // Ideal edge length
-          springConstant: 0.05,        // Edge stiffness
-          avoidOverlap: 1.0            // Maximize overlap avoidance
+          gravitationalConstant: -2000,  // Stronger repulsion to spread nodes
+          centralGravity: 0.001,        // Very weak central pull for distribution
+          springLength: 150,            // Longer edges for better spacing
+          springConstant: 0.02,         // Weaker springs for flexibility
+          avoidOverlap: 1.5,            // Stronger overlap avoidance
+          damping: 0.9                  // Slow movement for stability
         },
         solver: 'forceAtlas2Based',
         stabilization: {
           enabled: true,
-          iterations: 1000           // Ensure stable layout
+          iterations: 2000,            // More iterations for stable layout
+          updateInterval: 25
         }
       },
       edges: {
         arrows: 'to',
-        smooth: { type: 'curvedCW' }  // Curved edges for readability
+        smooth: { type: 'curvedCW', roundness: 0.5 },  // Smoother, less overlapping curves
+        width: 1,                                     // Thinner edges to reduce clutter
+        color: { inherit: false, opacity: 0.5 }       // Faint edges for readability
       },
       nodes: {
         shape: 'dot',
-        size: 20,
-        font: { size: 14 }
+        size: 15,                                     // Smaller nodes to reduce overlap
+        font: { size: 12, face: 'Arial', align: 'center' },  // Smaller, clearer labels
+        color: { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } }
       },
       interaction: {
         zoomView: true,
         dragView: true,
-        hover: true
+        hover: true,
+        tooltipDelay: 100,                            // Quick tooltips for details
+        hideEdgesOnDrag: true                         // Hide edges while dragging
+      },
+      clusters: {
+        maxNodeCount: 10,                             // Auto-cluster small groups
+        clusterEdgeThreshold: 5                       // Cluster edges with many connections
       }
     };
     var network = new vis.Network(container, data, options);
+
+    // Optional: Stabilize layout on load
+    network.on('stabilizationIterationsDone', function () {
+      network.setOptions({ physics: false });  // Lock layout after stabilization
+    });
   });
 </script>
 {% endblock %}
