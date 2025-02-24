@@ -1,12 +1,11 @@
 from rest_framework import serializers
-from ..models import TrafficFlow, ServiceEndpoint
+from netbox_network_flows.models import TrafficFlow, ServiceEndpoint
 from django.contrib.contenttypes.models import ContentType
 
-class ServiceEndpointSerializer(serializers.ModelSerializer):
+class ServiceEndpointsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceEndpoint
         fields = ['id', 'application_name', 'service_port', 'process_name']
-
 
 class TrafficFlowSerializer(serializers.ModelSerializer):
     src_content_type = serializers.PrimaryKeyRelatedField(
