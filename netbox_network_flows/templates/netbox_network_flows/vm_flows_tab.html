@@ -32,21 +32,10 @@
     var rawData = document.getElementById('vis-data').textContent;
     var data = JSON.parse(rawData);
     var options = {
-      layout: {
-        hierarchical: {
-          sortMethod: 'directed',
-          levelSeparation: 200,
-          nodeSpacing: 150
-        }
-      },
       physics: { enabled: false },
-      edges: {
-        arrows: 'to',
-        smooth: { type: 'curvedCW' }
-      },
       nodes: {
         shape: 'dot',
-        size: 20
+        size: 30
       },
       interaction: {
         zoomView: true,
