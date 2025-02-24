@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import TrafficFlow, ServiceEndpoints
+from ..models import TrafficFlow, ServiceEndpoint
 from .serializers import TrafficFlowSerializer, ServiceEndpointsSerializer
 
-class ServiceEndpointsViewSet(viewsets.ModelViewSet):
-    queryset = ServiceEndpoints.objects.all()
-    serializer_class = ServiceEndpointsSerializer
+class ServiceEndpointViewSet(viewsets.ModelViewSet):
+    queryset = ServiceEndpoint.objects.all()
+    serializer_class = ServiceEndpointSerializer
     
 class TrafficFlowViewSet(viewsets.ModelViewSet):
 
