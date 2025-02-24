@@ -22,12 +22,18 @@ class TrafficFlowDeleteView(generic.ObjectDeleteView):
     queryset = TrafficFlow.objects.all()
     default_return_url = 'netbox_network_flows:flow_list'
 
-class TrafficFlowImportView(generic.ObjectView):
+class TrafficFlowImportView(generic.BulkImportView):
     queryset = TrafficFlow.objects.all()
-
-    def get_extra_context(self, request, instance):
-        return {}
-
+    
+class TrafficFlowBulkEditView(generic.BulkEditView):
+    queryset = TrafficFlow.objects.all()
+    
+class TrafficFlowBulkDeleteView(generic.BulkDeleteView):
+    queryset = TrafficFlow.objects.all()
+    
+class TrafficFlowChangelogView(generic.ObjectChangelogView):
+    queryset = TrafficFlow.objects.all()
+        
 @register_model_view(VirtualMachine, 'flows', path='flows')
 class VirtualMachineFlowsView(generic.ObjectView):
     queryset = VirtualMachine.objects.all()
