@@ -13,7 +13,6 @@ import json
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
     table = TrafficFlowTable
-    template_name = 'netbox_network_flows/flow_list.html'
     actions = {
         'add': {'add': True},
         'edit': {'change': True},
@@ -24,11 +23,9 @@ class TrafficFlowListView(generic.ObjectListView):
 class TrafficFlowEditView(generic.ObjectEditView):
     queryset = TrafficFlow.objects.all()
     form = TrafficFlowForm
-    template_name = 'netbox_network_flows/flow_edit.html'
 
 class TrafficFlowDeleteView(generic.ObjectDeleteView):
     queryset = TrafficFlow.objects.all()
-    template_name = 'netbox_network_flows/flow_delete.html'
     default_return_url = 'netbox_network_flows:flow_list'
 
 class TrafficFlowImportView(generic.BulkImportView):
