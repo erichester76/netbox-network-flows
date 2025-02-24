@@ -244,7 +244,7 @@ class VirtualMachineFlowsView(generic.ObjectView):
         ).count() or 0,
     )
  
-    def get_extra_context(self, request, instance):
+def get_extra_context(self, request, instance):
         vm_ct = ContentType.objects.get_for_model(VirtualMachine)
         flows = TrafficFlow.objects.filter(
             models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
@@ -253,39 +253,31 @@ class VirtualMachineFlowsView(generic.ObjectView):
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
-        mermaid_code = "graph TD\n"
+        # Prepare data for vis.js
         nodes = set()
         edges = []
-        src_groups = defaultdict(list)
         for flow in flows:
-            group_key = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_content_type_id and flow.src_object_id else "unassigned"
-            src_groups[group_key].append(flow)
+            src_name = str(flow.src_object) if flow.src_object else flow.src_ip
+            dst_name = str(flow.dst_object) if flow.dst_object else flow.dst_ip
+            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else flow.src_ip
+            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else flow.dst_ip
+            nodes.add((src_id, src_name))
+            nodes.add((dst_id, dst_name))
+            edges.append({
+                'from': src_id,
+                'to': dst_id,
+                'label': f"{flow.protocol}:{flow.service_port}",
+                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'red'}
+            })
 
-        for group_key, group_flows in src_groups.items():
-            group_label = group_key if group_key == "unassigned" else f"{group_flows[0].src_object}"
-            mermaid_code += f"    subgraph {group_label.replace(' ', '_').replace('.', '_')}\n"
-            for flow in group_flows:
-                src_name = str(flow.src_object) if flow.src_object else f"{flow.src_ip}"
-                dst_name = str(flow.dst_object) if flow.dst_object else f"{flow.dst_ip}"
-                src_node = f"{src_name}:0" if flow.dst_content_type == vm_ct and flow.dst_object_id == instance.pk else f"{src_name}:{flow.service_port}"
-                dst_node = f"{dst_name}:{flow.service_port}" if flow.dst_content_type == vm_ct and flow.dst_object_id == instance.pk else f"{dst_name}:0"
-                edge = f"{src_node} --> |{flow.protocol}| {dst_node}"
-                src_node = src_node.replace(" ", "_").replace(".", "_").replace(":", "_")
-                dst_node = dst_node.replace(" ", "_").replace(".", "_").replace(":", "_")
-                edge = edge.replace(" ", "_").replace(".", "_").replace(":", "_")
-                nodes.add(src_node)
-                nodes.add(dst_node)
-                edges.append(edge)
-            mermaid_code += "    end\n"
+        vis_data = {
+            'nodes': [{'id': nid, 'label': nlabel} for nid, nlabel in nodes],
+            'edges': edges
+        }
 
-        for node in nodes:
-            mermaid_code += f"    {node}\n"
-        for edge in edges:
-            mermaid_code += f"    {edge}\n"
-        
         return {
             'flows_table': flows_table,
-            'mermaid_code': mermaid_code,
+            'vis_data': json.dumps(vis_data),
         }
 
 @register_model_view(Device, 'flows', path='flows')
@@ -301,48 +293,40 @@ class DeviceFlowsView(generic.ObjectView):
         ).count() or 0,
     )
  
-    def get_extra_context(self, request, instance):
-        device_ct = ContentType.objects.get_for_model(Device)
+def get_extra_context(self, request, instance):
+        vm_ct = ContentType.objects.get_for_model(VirtualMachine)
         flows = TrafficFlow.objects.filter(
-            models.Q(src_content_type=device_ct, src_object_id=instance.pk) |
-            models.Q(dst_content_type=device_ct, dst_object_id=instance.pk)
+            models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
+            models.Q(dst_content_type=vm_ct, dst_object_id=instance.pk)
         ).prefetch_related('src_content_type', 'dst_content_type')
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
-        mermaid_code = "graph TD\n"
+        # Prepare data for vis.js
         nodes = set()
         edges = []
-        src_groups = defaultdict(list)
         for flow in flows:
-            group_key = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_content_type_id and flow.src_object_id else "unassigned"
-            src_groups[group_key].append(flow)
+            src_name = str(flow.src_object) if flow.src_object else flow.src_ip
+            dst_name = str(flow.dst_object) if flow.dst_object else flow.dst_ip
+            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else flow.src_ip
+            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else flow.dst_ip
+            nodes.add((src_id, src_name))
+            nodes.add((dst_id, dst_name))
+            edges.append({
+                'from': src_id,
+                'to': dst_id,
+                'label': f"{flow.protocol}:{flow.service_port}",
+                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'red'}
+            })
 
-        for group_key, group_flows in src_groups.items():
-            group_label = group_key if group_key == "unassigned" else f"{group_flows[0].src_object}"
-            mermaid_code += f"    subgraph {group_label.replace(' ', '_').replace('.', '_')}\n"
-            for flow in group_flows:
-                src_name = str(flow.src_object) if flow.src_object else f"{flow.src_ip}"
-                dst_name = str(flow.dst_object) if flow.dst_object else f"{flow.dst_ip}"
-                src_node = f"{src_name}:0" if flow.dst_content_type == device_ct and flow.dst_object_id == instance.pk else f"{src_name}:{flow.service_port}"
-                dst_node = f"{dst_name}:{flow.service_port}" if flow.dst_content_type == device_ct and flow.dst_object_id == instance.pk else f"{dst_name}:0"
-                edge = f"{src_node} --> |{flow.protocol}| {dst_node}"
-                src_node = src_node.replace(" ", "_").replace(".", "_").replace(":", "_")
-                dst_node = dst_node.replace(" ", "_").replace(".", "_").replace(":", "_")
-                edge = edge.replace(" ", "_").replace(".", "_").replace(":", "_")
-                nodes.add(src_node)
-                nodes.add(dst_node)
-                edges.append(edge)
-            mermaid_code += "    end\n"
+        vis_data = {
+            'nodes': [{'id': nid, 'label': nlabel} for nid, nlabel in nodes],
+            'edges': edges
+        }
 
-        for node in nodes:
-            mermaid_code += f"    {node}\n"
-        for edge in edges:
-            mermaid_code += f"    {edge}\n"
-        
         return {
             'flows_table': flows_table,
-            'mermaid_code': mermaid_code,
+            'vis_data': json.dumps(vis_data),
         }
         
 class TrafficFlowListView(ObjectListView):

@@ -1,6 +1,5 @@
 {% extends 'generic/object.html' %}
 {% load render_table from django_tables2 %}
-{% load static %}
 
 {% block content %}
 <div class="row">
@@ -10,13 +9,12 @@
         <h5>Traffic Flows</h5>
       </div>
       <div class="card-body">
-        {% if flows %}
-          <h6>Mermaid Flow Diagram</h6>
-          <div class="mermaid">
-            {{ mermaid_code|safe }}
-          </div>
+        {% if flows_table %}
+          {% render_table flows_table %}
+          <h6>Flow Diagram</h6>
+          <div id="flow-network" style="height: 500px;"></div>
         {% else %}
-          <p>No traffic flows found for this device.</p>
+          <p>No traffic flows found for this virtual machine.</p>
         {% endif %}
       </div>
     </div>
@@ -25,8 +23,16 @@
 {% endblock %}
 
 {% block javascript %}
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
-<script>
-  mermaid.initialize({ startOnLoad: true });
+<script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    var container = document.getElementById('flow-network');
+    var data = {{ vis_data|safe }};
+    var options = {
+      physics: { enabled: true },
+      edges: { arrows: 'to' }
+    };
+    var network = new vis.Network(container, data, options);
+  });
 </script>
 {% endblock %}
