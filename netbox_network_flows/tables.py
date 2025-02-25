@@ -10,19 +10,17 @@ class ServiceEndpointTable(NetBoxTable):
 
     class Meta:
         model = ServiceEndpoint
-        fields = "__all__"
+        fields = ('application_name', 'service_port', 'process_name', 'created', 'last_updated')
         default_columns = ('application_name', 'service_port', 'process_name')
         orderable = True
         
 class TrafficFlowTable(NetBoxTable):
     timestamp = columns.DateTimeColumn()
-    
     src_ip = tables.Column(verbose_name='Source IP')
     src_object = tables.Column(
         verbose_name='Source Object',
         linkify=True
     )
-    
     dst_ip = tables.Column(verbose_name='Destination IP')
     dst_object = tables.Column(
         verbose_name='Destination Object',
@@ -36,5 +34,5 @@ class TrafficFlowTable(NetBoxTable):
     
     class Meta(NetBoxTable.Meta):
         model = TrafficFlow
-        fields = "__all__"
+        fields = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'server_id', 'service_endpoint', 'timestamp', 'created', 'last_updated')
         default_columns = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'service_endpoint')
