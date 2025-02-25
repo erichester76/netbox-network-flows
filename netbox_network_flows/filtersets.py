@@ -20,4 +20,4 @@ class TrafficFlowFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = TrafficFlow
-        fields = ['src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'timestamp']
+        fields = ['src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id']

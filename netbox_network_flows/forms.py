@@ -47,9 +47,6 @@ class TrafficFlowForm(NetBoxModelForm):
     class Meta:
         model = TrafficFlow
         fields = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id', 'src_content_type', 'dst_content_type')
-        widgets = {
-            'timestamp': forms.NumberInput(attrs={'step': '0.01'}),
-        }
 
     def __init__(self, *args, **kwargs):
         try:

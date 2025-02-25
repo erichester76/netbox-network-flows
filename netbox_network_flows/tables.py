@@ -15,7 +15,6 @@ class ServiceEndpointTable(NetBoxTable):
         orderable = True
         
 class TrafficFlowTable(NetBoxTable):
-    timestamp = columns.DateTimeColumn()
     src_ip = tables.Column(verbose_name='Source IP')
     src_object = tables.Column(
         verbose_name='Source Object',
