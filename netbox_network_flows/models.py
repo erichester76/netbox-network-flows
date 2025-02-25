@@ -41,7 +41,7 @@ class TrafficFlow(NetBoxModel):
     service_endpoint_id = models.ForeignKey(ServiceEndpoint, on_delete=models.SET_NULL, null=True, blank=True, related_name='traffic_flows', help_text="Associated service endpoint")
     
     class Meta:
-        unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')
+        unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port')
 
     def save(self, *args, **kwargs):
         # Resolve src_ip via IPAddress
