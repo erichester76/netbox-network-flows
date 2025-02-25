@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 from netbox_network_flows.models import TrafficFlow, ServiceEndpoint
 from .serializers import TrafficFlowSerializer, ServiceEndpointSerializer
 from ..filtersets import ServiceEndpointFilterSet, TrafficFlowFilterSet
+from django.db.models import Count 
 
 class TrafficFlowViewSet(viewsets.ModelViewSet):
     queryset = TrafficFlow.objects.all()
