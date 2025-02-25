@@ -1,19 +1,19 @@
-from netbox.plugins import PluginMenuItem, PluginMenuButton, PluginMenu
+# netbox_network_flows/navigation.py
+from netbox.plugins import PluginMenu, PluginMenuItem, PluginMenuButton
 
 items = (
-
-        PluginMenuItem(
-        link='plugins:netbox_network_flows:trafficflow_list',
+    PluginMenuItem(
+        link='netbox_network_flows:flow_list',
         link_text='Flows',
         buttons=(
             PluginMenuButton(
-                link='plugins:netbox_network_flows:trafficflow_add',
+                link='netbox_network_flows:trafficflow_add',
                 title='Add',
                 icon_class='mdi mdi-plus-thick',
                 permissions=['netbox_network_flows.add_flow']
             ),
             PluginMenuButton(
-                link='plugins:netbox_network_flows:trafficflow_import',
+                link='netbox_network_flows:trafficflow_import',
                 title='Import',
                 icon_class='mdi mdi-upload',
                 permissions=['netbox_network_flows.add_flow']
@@ -21,19 +21,18 @@ items = (
         ),
         permissions=['netbox_network_flows.view_flow']
     ),
-        
     PluginMenuItem(
-        link='plugins:netbox_network_flows:serviceendpoint_list',
+        link='netbox_network_flows:serviceendpoint_list',
         link_text='Service Endpoints',
         buttons=(
             PluginMenuButton(
-                link='plugins:netbox_network_flows:serviceendpoint_add',
+                link='netbox_network_flows:serviceendpoint_add',
                 title='Add',
                 icon_class='mdi mdi-plus-thick',
                 permissions=['netbox_network_flows.add_serviceendpoint']
             ),
             PluginMenuButton(
-                link='plugins:netbox_network_flows:serviceendpoint_import',
+                link='netbox_network_flows:serviceendpoint_import',
                 title='Import',
                 icon_class='mdi mdi-upload',
                 permissions=['netbox_network_flows.add_serviceendpoint']
