@@ -18,19 +18,19 @@ class ServiceEndpointListView(generic.ObjectListView):
 class ServiceEndpointEditView(generic.ObjectEditView):
     queryset = ServiceEndpoint.objects.all()
     form = ServiceEndpointForm
-    default_return_url = 'netbox_network_flows:serviceendpoint_list'
+    default_return_url = 'plugins:netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointDeleteView(generic.ObjectDeleteView):
     queryset = ServiceEndpoint.objects.all()
-    default_return_url = 'netbox_network_flows:serviceendpoint_list'
+    default_return_url = 'plugins:netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointBulkEditView(generic.BulkEditView):
     queryset = ServiceEndpoint.objects.all()
-    default_return_url = 'netbox_network_flows:serviceendpoint_list'
+    default_return_url = 'plugins:netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointBulkDeleteView(generic.BulkDeleteView):
     queryset = ServiceEndpoint.objects.all()
-    default_return_url = 'netbox_network_flows:serviceendpoint_list'
+    default_return_url = 'plugins:netbox_network_flows:serviceendpoint_list'
 
 class ServiceEndpointImportView(generic.BulkImportView):
     queryset = ServiceEndpoint.objects.all()
@@ -49,13 +49,14 @@ class TrafficFlowEditView(generic.ObjectEditView):
 
 class TrafficFlowDeleteView(generic.ObjectDeleteView):
     queryset = TrafficFlow.objects.all()
-    default_return_url = 'netbox_network_flows:flow_list'
+    default_return_url = 'plugins:netbox_network_flows:flow_list'
 
 class TrafficFlowImportView(generic.BulkImportView):
     queryset = TrafficFlow.objects.all()
 
 class TrafficFlowBulkEditView(generic.BulkEditView):
     queryset = TrafficFlow.objects.all()
+    default_return_url = 'plugins:netbox_network_flows:flow_list'
 
 class TrafficFlowBulkDeleteView(generic.BulkDeleteView):
     queryset = TrafficFlow.objects.all()
