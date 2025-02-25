@@ -12,5 +12,5 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
     serializer_class = TrafficFlowSerializer
 
 class ServiceEndpointViewSet(viewsets.ModelViewSet):
-    queryset = ServiceEndpoint.objects.all().annotate(flow_count=Count('flows'))
+    queryset = ServiceEndpoint.objects.all()
     serializer_class = ServiceEndpointSerializer

@@ -39,7 +39,7 @@ items = (
                 permissions=['netbox_network_flows.add_serviceendpoint']
             ),
         ),
-        permissions=['netbox_network_flows.view_service_endpoint']
+        permissions=['netbox_network_flows.view_serviceendpoint']
     ),
 )
 
