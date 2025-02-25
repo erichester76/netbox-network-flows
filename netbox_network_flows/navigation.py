@@ -1,7 +1,7 @@
 from netbox.plugins import PluginMenu, PluginMenuItem, PluginMenuButton
 
 items = (
-    PluginMenuItem(
+        PluginMenuItem(
         link='plugins:netbox_network_flows:trafficflow_list',
         link_text='Flows',
         buttons=(
