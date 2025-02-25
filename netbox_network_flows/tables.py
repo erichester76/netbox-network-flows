@@ -3,7 +3,7 @@ from netbox.tables import NetBoxTable, columns
 import django_tables2 as tables
 
 
-class ServiceEndpointTable(tables.Table):
+class ServiceEndpointTable(NetBoxTable):
     application_name = tables.Column()
     service_port = tables.Column()
     process_name = tables.Column()
@@ -26,7 +26,7 @@ class TrafficFlowTable(NetBoxTable):
         linkify=True
     )
     
-    serviice_endpoint = tables.Column(
+    service_endpoint = tables.Column(
         verbose_name='Service Endpoint',
         linkify=True
     )
