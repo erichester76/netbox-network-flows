@@ -1,7 +1,8 @@
 import django_filters
 from netbox_network_flows.models import ServiceEndpoint, TrafficFlow
+from netbox.api.filters import NetBoxFilterSet
 
-class ServiceEndpointFilterSet(django_filters.FilterSet):
+class ServiceEndpointFilterSet(NetBoxFilterSet):
     service_port = django_filters.NumberFilter(field_name='service_port', lookup_expr='exact')
     process_name = django_filters.CharFilter(field_name='process_name', lookup_expr='iexact')
     application_name = django_filters.CharFilter(field_name='application_name', lookup_expr='icontains')
@@ -10,7 +11,7 @@ class ServiceEndpointFilterSet(django_filters.FilterSet):
         model = ServiceEndpoint
         fields = ['service_port', 'process_name', 'application_name']
 
-class TrafficFlowFilterSet(django_filters.FilterSet):
+class TrafficFlowFilterSet(NetBoxFilterSet):
     src_ip = django_filters.CharFilter(field_name='src_ip', lookup_expr='exact')
     dst_ip = django_filters.CharFilter(field_name='dst_ip', lookup_expr='exact')
     protocol = django_filters.CharFilter(field_name='protocol', lookup_expr='exact')
