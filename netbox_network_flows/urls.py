@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from .models import TrafficFlow, ServiceEndpoint
 
+app_name = 'netbox_network_flows'
+
 urlpatterns = [
     
     path('flows/', views.TrafficFlowListView.as_view(), name='trafficflow_list'),
