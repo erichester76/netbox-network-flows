@@ -19,12 +19,7 @@ class ServiceEndpoint(NetBoxModel):
 
     def __str__(self):
         return f"{self.application_name}"
-    
-    @property
-    def flow_count(self):
-        from .models import TrafficFlow  # Import here to avoid circular imports
-        return TrafficFlow.objects.filter(service_endpoint=self).count()
-    
+
     def get_absolute_url(self):
         return reverse('plugins:netbox_network_flows:serviceendpoints', kwargs={'pk': self.pk})
 

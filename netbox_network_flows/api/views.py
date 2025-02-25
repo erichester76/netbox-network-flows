@@ -43,7 +43,7 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
             serializer.save()
 
 class ServiceEndpointViewSet(viewsets.ModelViewSet):
-    queryset = ServiceEndpoint.objects.all()
+    queryset = ServiceEndpoint.objects.all().annotate(flow_count=Count('flows'))
     serializer_class = ServiceEndpointSerializer
 
     def create(self, request, *args, **kwargs):

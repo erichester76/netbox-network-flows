@@ -3,16 +3,11 @@ from netbox_network_flows.models import TrafficFlow, ServiceEndpoint
 from django.contrib.contenttypes.models import ContentType
 
 class ServiceEndpointSerializer(serializers.ModelSerializer):
-    flow_count = serializers.IntegerField(read_only=True)
-    flow_link = serializers.SerializerMethodField()
 
     class Meta:
         model = ServiceEndpoint
-        fields = ['id', 'application_name', 'service_port', 'process_name', 'flow_count', 'flow_link']
-
-    def get_flow_link(self, obj):
-        return f"/netbox/api/plugins/flows/flows/?service_endpoint={obj.id}"
-    
+        fields = ['id', 'application_name', 'service_port', 'process_name']
+        
 class TrafficFlowSerializer(serializers.ModelSerializer):
     src_content_type = serializers.PrimaryKeyRelatedField(
         queryset=ContentType.objects.all(),

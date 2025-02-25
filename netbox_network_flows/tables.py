@@ -7,11 +7,10 @@ class ServiceEndpointTable(tables.Table):
     application_name = tables.Column()
     service_port = tables.Column()
     process_name = tables.Column()
-    flow_count = tables.LinkColumn('trafficflow_by_endpoint_list', args=[tables.A('id')], verbose_name='Flows')
 
     class Meta:
         model = ServiceEndpoint
-        fields = ('application_name', 'service_port', 'process_name', 'flow_count')
+        fields = ('application_name', 'service_port', 'process_name')
         orderable = True
         
 class TrafficFlowTable(NetBoxTable):
