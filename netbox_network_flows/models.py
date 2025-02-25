@@ -5,6 +5,7 @@ from netbox.models import NetBoxModel
 from ipam.models import IPAddress
 from virtualization.models import VirtualMachine, VMInterface
 from dcim.models import Device, Interface
+from django.urls import reverse
 
 class ServiceEndpoint(NetBoxModel):
     application_name = models.CharField(max_length=100, help_text="Name of the application")
@@ -14,10 +15,13 @@ class ServiceEndpoint(NetBoxModel):
     class Meta:
         verbose_name = "Service Endpoint"
         verbose_name_plural = "Service Endpoints"
-        unique_together = ('application_name', 'service_port')  # Ensure uniqueness per app and port
+        unique_together = ('application_name', 'service_port') 
 
     def __str__(self):
-        return f"{self.application_name}:{self.service_port} ({self.process_name or 'unknown'})"
+        return f"{self.application_name}"
+    
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_network_flows:serviceendpoints', kwargs={'pk': self.pk})
 
 
 class TrafficFlow(NetBoxModel):
@@ -89,3 +93,8 @@ class TrafficFlow(NetBoxModel):
 
     def __str__(self):
         return f"{self.src_ip} -> {self.dst_ip} ({self.protocol}:{self.service_port})"
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_network_flows:trafficflows', kwargs={'pk': self.pk})
+
+    
