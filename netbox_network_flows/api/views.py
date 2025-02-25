@@ -10,48 +10,7 @@ from django.db.models import Count
 class TrafficFlowViewSet(viewsets.ModelViewSet):
     queryset = TrafficFlow.objects.all()
     serializer_class = TrafficFlowSerializer
-    filterset_class = TrafficFlowFilterSet
-
-    def create(self, request, *args, **kwargs):
-        if isinstance(request.data, dict) and 'flows' in request.data:
-            flows = request.data['flows']
-            server_id = request.data.get('server_id', '')
-            created_flows = []
-            for flow in flows:
-                flow['server_id'] = server_id
-                serializer = self.get_serializer(data=flow)
-                serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                created_flows.append(serializer.data)
-            return Response(created_flows, status=status.HTTP_201_CREATED)
-        
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        service_endpoint_id = serializer.validated_data.get('service_endpoint')
-        if service_endpoint_id:
-            try:
-                service_endpoint = ServiceEndpoint.objects.get(id=service_endpoint_id)
-                serializer.save(service_endpoint=service_endpoint)
-            except ServiceEndpoint.DoesNotExist:
-                raise ValidationError({"service_endpoint": "Service endpoint does not exist."})
-        else:
-            serializer.save()
 
 class ServiceEndpointViewSet(viewsets.ModelViewSet):
     queryset = ServiceEndpoint.objects.all().annotate(flow_count=Count('flows'))
     serializer_class = ServiceEndpointSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        serializer.save()

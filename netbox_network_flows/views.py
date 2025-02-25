@@ -5,7 +5,6 @@ from dcim.models import Device
 from .models import TrafficFlow, ServiceEndpoint
 from .tables import TrafficFlowTable, ServiceEndpointTable
 from .forms import TrafficFlowForm, ServiceEndpointForm
-from .filtersets import ServiceEndpointFilterSet, TrafficFlowFilterSet
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 import json

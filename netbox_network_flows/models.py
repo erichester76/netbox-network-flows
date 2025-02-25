@@ -21,7 +21,7 @@ class ServiceEndpoint(NetBoxModel):
         return f"{self.application_name}"
 
     def get_absolute_url(self):
-        return reverse('plugins:netbox_network_flows:serviceendpoints', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_network_flows:serviceendpoint', kwargs={'pk': self.pk})
 
 
 class TrafficFlow(NetBoxModel):
@@ -38,7 +38,7 @@ class TrafficFlow(NetBoxModel):
     dst_object_id = models.PositiveIntegerField(null=True, blank=True)
     dst_object = GenericForeignKey('dst_content_type', 'dst_object_id')
     timestamp = models.FloatField()
-    service_endpoint = models.ForeignKey(ServiceEndpoint, on_delete=models.SET_NULL, null=True, blank=True, related_name='flows', help_text="Associated service endpoint")
+    service_endpoint = models.ForeignKey(ServiceEndpoint, on_delete=models.SET_NULL, null=True, blank=True, related_name='traffic_flows', help_text="Associated service endpoint")
     
     class Meta:
         unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id')
@@ -95,6 +95,6 @@ class TrafficFlow(NetBoxModel):
         return f"{self.src_ip} -> {self.dst_ip} ({self.protocol}:{self.service_port})"
 
     def get_absolute_url(self):
-        return reverse('plugins:netbox_network_flows:trafficflows', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_network_flows:trafficflow', kwargs={'pk': self.pk})
 
     
