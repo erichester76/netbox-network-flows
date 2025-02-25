@@ -1,7 +1,7 @@
-from rest_framework.routers import DefaultRouter
+from netbox.api.routers import NetBoxRouter
 from .views import TrafficFlowViewSet, ServiceEndpointViewSet
 
-router = DefaultRouter()
+router = NetBoxRouter()
 router.register('flows', TrafficFlowViewSet)
 router.register('service-endpoints', ServiceEndpointViewSet)
 
