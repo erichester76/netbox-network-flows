@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from netbox_network_flows.models import TrafficFlow, ServiceEndpoint
-from .serializers import TrafficFlowSerializer, ServiceEndpointsSerializer
+from .serializers import TrafficFlowSerializer, ServiceEndpointSerializer
 
 class TrafficFlowViewSet(viewsets.ModelViewSet):
     queryset = TrafficFlow.objects.all()
@@ -41,4 +41,4 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
 
 class ServiceEndpointViewSet(viewsets.ModelViewSet):
     queryset = ServiceEndpoint.objects.all()
-    serializer_class = ServiceEndpointsSerializer
+    serializer_class = ServiceEndpointSerializer
