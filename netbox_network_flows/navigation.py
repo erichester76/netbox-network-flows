@@ -1,4 +1,3 @@
-# plugins:netbox_network_flows/navigation.py
 from netbox.plugins import PluginMenu, PluginMenuItem, PluginMenuButton
 
 items = (

@@ -1,5 +1,5 @@
 import django_filters
-from ..models import ServiceEndpoint, TrafficFlow
+from .models import ServiceEndpoint, TrafficFlow
 from netbox.filtersets import NetBoxModelFilterSet
 
 class ServiceEndpointFilterSet(NetBoxModelFilterSet):
