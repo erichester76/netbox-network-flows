@@ -3,7 +3,7 @@ from netbox.plugins import PluginMenu, PluginMenuItem, PluginMenuButton
 
 items = (
     PluginMenuItem(
-        link='netbox_network_flows:flow_list',
+        link='netbox_network_flows:trafficflow_list',
         link_text='Flows',
         buttons=(
             PluginMenuButton(
