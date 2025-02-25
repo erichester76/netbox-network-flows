@@ -20,6 +20,9 @@ class ServiceEndpoint(NetBoxModel):
     def __str__(self):
         return f"{self.application_name}"
 
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_network_flows:serviceendpoint', kwargs={'pk': self.pk})
+
 
 class TrafficFlow(NetBoxModel):
     src_ip = models.CharField(max_length=45)
@@ -84,11 +87,14 @@ class TrafficFlow(NetBoxModel):
                 service_port=self.service_port,
                 defaults={'application_name': f"Unknown_{self.service_port}"}
             )
-            self.service_endpoint = service_endpoint
+            self.service_endpoint_id = service_endpoint
             
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.src_ip} -> {self.dst_ip} ({self.protocol}:{self.service_port})"
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_network_flows:trafficflow', kwargs={'pk': self.pk})
 
     

@@ -9,6 +9,7 @@ class ServiceEndpointSerializer(serializers.ModelSerializer):
         fields = ['id', 'application_name', 'service_port', 'process_name']
         
 class TrafficFlowSerializer(serializers.ModelSerializer):
+    
     src_content_type = serializers.PrimaryKeyRelatedField(
         queryset=ContentType.objects.all(),
         allow_null=True,
