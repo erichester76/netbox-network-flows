@@ -8,7 +8,7 @@ class ServiceEndpointTable(NetBoxTable):
     service_port = tables.Column()
     process_name = tables.Column()
 
-    class Meta:
+    class Meta(NetBoxTable.Meta):
         model = ServiceEndpoint
         fields = ('application_name', 'service_port', 'process_name', 'created', 'last_updated')
         default_columns = ('application_name', 'service_port', 'process_name')
@@ -26,7 +26,6 @@ class TrafficFlowTable(NetBoxTable):
         verbose_name='Destination Object',
         linkify=True
     )
-    
     service_endpoint = tables.Column(
         verbose_name='Service Endpoint',
         linkify=True
