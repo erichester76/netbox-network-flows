@@ -17,7 +17,6 @@ class TrafficFlowFilterSet(NetBoxModelFilterSet):
     protocol = django_filters.CharFilter(field_name='protocol', lookup_expr='exact')
     service_port = django_filters.NumberFilter(field_name='service_port', lookup_expr='exact')
     server_id = django_filters.CharFilter(field_name='server_id', lookup_expr='exact')
-    timestamp = django_filters.NumberFilter(field_name='timestamp', lookup_expr='exact')
 
     class Meta:
         model = TrafficFlow

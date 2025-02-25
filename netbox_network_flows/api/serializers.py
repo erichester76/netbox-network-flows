@@ -6,7 +6,7 @@ class ServiceEndpointSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ServiceEndpoint
-        fields = ['id', 'application_name', 'service_port', 'process_name']
+        fields = "__all__"
         
 class TrafficFlowSerializer(serializers.ModelSerializer):
     
@@ -28,8 +28,4 @@ class TrafficFlowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TrafficFlow
-        fields = [
-            'id', 'src_ip', 'dst_ip', 'protocol', 'service_port', 'server_id',
-            'src_content_type', 'src_object_id', 'dst_content_type', 'dst_object_id',
-            'timestamp', 'service_endpoint_id'
-        ]
+        fields = "__all__"
