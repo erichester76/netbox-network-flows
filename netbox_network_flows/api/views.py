@@ -10,7 +10,9 @@ from django.db.models import Count
 class TrafficFlowViewSet(viewsets.ModelViewSet):
     queryset = TrafficFlow.objects.all()
     serializer_class = TrafficFlowSerializer
+    filterset_class = TrafficFlowFilterSet
 
 class ServiceEndpointViewSet(viewsets.ModelViewSet):
     queryset = ServiceEndpoint.objects.all()
     serializer_class = ServiceEndpointSerializer
+    filterset_class = ServiceEndpointFilterSet

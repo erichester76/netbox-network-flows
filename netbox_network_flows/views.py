@@ -5,6 +5,7 @@ from dcim.models import Device
 from .models import TrafficFlow, ServiceEndpoint
 from .tables import TrafficFlowTable, ServiceEndpointTable
 from .forms import TrafficFlowForm, ServiceEndpointForm
+from .filtersets import ServiceEndpointFilterSet, TrafficFlowFilterSet
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 import json
@@ -12,6 +13,7 @@ import json
 class ServiceEndpointListView(generic.ObjectListView):
     queryset = ServiceEndpoint.objects.all()
     table = ServiceEndpointTable
+    filterset = ServiceEndpointFilterSet
 
 class ServiceEndpointEditView(generic.ObjectEditView):
     queryset = ServiceEndpoint.objects.all()
@@ -39,6 +41,7 @@ class ServiceEndpointChangelogView(generic.ObjectChangeLogView):
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
     table = TrafficFlowTable
+    filterset = TrafficFlowFilterSet
 
 class TrafficFlowEditView(generic.ObjectEditView):
     queryset = TrafficFlow.objects.all()
