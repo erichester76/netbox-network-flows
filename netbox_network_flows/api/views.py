@@ -4,10 +4,12 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from netbox_network_flows.models import TrafficFlow, ServiceEndpoint
 from .serializers import TrafficFlowSerializer, ServiceEndpointSerializer
+from ..filtersets import ServiceEndpointFilterSet, TrafficFlowFilterSet
 
 class TrafficFlowViewSet(viewsets.ModelViewSet):
     queryset = TrafficFlow.objects.all()
     serializer_class = TrafficFlowSerializer
+    filterset_class = TrafficFlowFilterSet
 
     def create(self, request, *args, **kwargs):
         if isinstance(request.data, dict) and 'flows' in request.data:
@@ -42,3 +44,4 @@ class TrafficFlowViewSet(viewsets.ModelViewSet):
 class ServiceEndpointViewSet(viewsets.ModelViewSet):
     queryset = ServiceEndpoint.objects.all()
     serializer_class = ServiceEndpointSerializer
+    filterset_class = ServiceEndpointFilterSet  
