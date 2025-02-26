@@ -8,12 +8,11 @@ from .forms import TrafficFlowForm, ServiceEndpointForm
 from .filtersets import ServiceEndpointFilterSet, TrafficFlowFilterSet
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-import json
 
 class ServiceEndpointListView(generic.ObjectListView):
     queryset = ServiceEndpoint.objects.all()
     table = ServiceEndpointTable
-    #filterset = ServiceEndpointFilterSet
+    filterset = ServiceEndpointFilterSet
 
 class ServiceEndpointEditView(generic.ObjectEditView):
     queryset = ServiceEndpoint.objects.all()
@@ -41,7 +40,7 @@ class ServiceEndpointChangelogView(generic.ObjectChangeLogView):
 class TrafficFlowListView(generic.ObjectListView):
     queryset = TrafficFlow.objects.all()
     table = TrafficFlowTable
-    #filterset = TrafficFlowFilterSet
+    filterset = TrafficFlowFilterSet
 
 class TrafficFlowEditView(generic.ObjectEditView):
     queryset = TrafficFlow.objects.all()
@@ -85,12 +84,10 @@ class VirtualMachineFlowsView(generic.ObjectView):
                 models.Q(src_content_type=ContentType.objects.get_for_model(VirtualMachine), src_object_id=instance.pk) |
                 models.Q(dst_content_type=ContentType.objects.get_for_model(VirtualMachine), dst_object_id=instance.pk)
             )
-            flows_table = TrafficFlowTable(flows)
-            flows_table.configure(request)
         except Exception as e:
-            flows_table = None
+            flows = None
         return {
-            'flows_table': flows_table,
+            'flows_table': flows,
         }
     
 # Apply similar changes to DeviceFlowsView
@@ -115,10 +112,10 @@ class DeviceFlowsView(generic.ObjectView):
                 models.Q(src_content_type=ContentType.objects.get_for_model(Device), src_object_id=instance.pk) |
                 models.Q(dst_content_type=ContentType.objects.get_for_model(Device), dst_object_id=instance.pk)
             )
-            flows_table = TrafficFlowTable(flows)
-            flows_table.configure(request)
+            #flows_table = TrafficFlowTable(flows)
+            #flows_table.configure(request)
         except Exception as e:
-            flows_table = None
+            flows = None
         return {
-            'flows_table': flows_table,
+            'flows_table': flows,
         }
