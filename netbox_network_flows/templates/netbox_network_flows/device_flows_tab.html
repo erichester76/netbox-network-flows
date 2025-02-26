@@ -1,5 +1,4 @@
 {% extends 'generic/object.html' %}
-{% load helpers %}
 {% load render_table from django_tables2 %}
 
 {% block content %}
@@ -14,11 +13,11 @@
           <!-- Flow Table Section (Closed by Default) -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingTable">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTable" aria-expanded="false" aria-controls="collapseTable">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTable" aria-expanded="false" aria-controls="collapseTable">
                 Flow Table
               </button>
             </h2>
-            <div id="collapseTable" class="accordion-collapse collapse" aria-labelledby="headingTable" data-bs-parent="#flowsAccordion">
+            <div id="collapseTable" class="accordion-collapse collapse show" aria-labelledby="headingTable" data-bs-parent="#flowsAccordion">
               <div class="accordion-body">
                 {% if flows_table %}
                   {% render_table flows_table %}
@@ -27,10 +26,25 @@
                 {% endif %}
               </div>
             </div>
-          </div>       
+          </div>
+
+          <!-- Flow Diagram Section (Open by Default) -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingDiagram">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDiagram" aria-expanded="true" aria-controls="collapseDiagram">
+                Flow Diagram
+              </button>
+            </h2>
+            <div id="collapseDiagram" class="accordion-collapse collapse show" aria-labelledby="headingDiagram" data-bs-parent="#flowsAccordion">
+              <div class="accordion-body">
+                <div id="flow-network" style="height: 800px;"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
+
