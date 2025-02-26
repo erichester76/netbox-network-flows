@@ -246,7 +246,6 @@ def process_packet(packet):
             "protocol": proto_name,
             "service_port": service_port,
             "server_id": SERVER_ID,
-            "timestamp": time.time(),
             "service_endpoint": None  # Default to None for non-local flows
         }
 
