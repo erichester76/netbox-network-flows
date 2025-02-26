@@ -86,30 +86,8 @@ class VirtualMachineFlowsView(generic.ObjectView):
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
-        nodes = set()
-        edges = []
-        for flow in flows:
-            src_name = str(flow.src_object) if flow.src_object else flow.src_ip
-            dst_name = str(flow.dst_object) if flow.dst_object else flow.dst_ip
-            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else f"ip_{flow.src_ip}"
-            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else f"ip_{flow.dst_ip}"
-            nodes.add((src_id, src_name))
-            nodes.add((dst_id, dst_name))
-            edges.append({
-                'from': src_id,
-                'to': dst_id,
-                'label': f"{flow.protocol}:{flow.service_port}",
-                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'green'}
-            })
-
-        vis_data = {
-            'nodes': [{'id': nid, 'label': nlabel} for nid, nlabel in nodes],
-            'edges': edges
-        }
-
         return {
             'flows_table': flows_table,
-            'vis_data': json.dumps(vis_data),
         }
 
 # Apply similar changes to DeviceFlowsView
@@ -127,7 +105,7 @@ class DeviceFlowsView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        vm_ct = ContentType.objects.get_for_model(VirtualMachine)
+        vm_ct = ContentType.objects.get_for_model(Device)
         flows = TrafficFlow.objects.filter(
             models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
             models.Q(dst_content_type=vm_ct, dst_object_id=instance.pk)
@@ -135,28 +113,7 @@ class DeviceFlowsView(generic.ObjectView):
         flows_table = TrafficFlowTable(flows)
         flows_table.configure(request)
 
-        nodes = set()
-        edges = []
-        for flow in flows:
-            src_name = str(flow.src_object) if flow.src_object else flow.src_ip
-            dst_name = str(flow.dst_object) if flow.dst_object else flow.dst_ip
-            src_id = f"{flow.src_content_type_id}_{flow.src_object_id}" if flow.src_object else f"ip_{flow.src_ip}"
-            dst_id = f"{flow.dst_content_type_id}_{flow.dst_object_id}" if flow.dst_object else f"ip_{flow.dst_ip}"
-            nodes.add((src_id, src_name))
-            nodes.add((dst_id, dst_name))
-            edges.append({
-                'from': src_id,
-                'to': dst_id,
-                'label': f"{flow.protocol}:{flow.service_port}",
-                'color': {'color': 'blue' if flow.protocol == 'tcp' else 'green'}
-            })
-
-        vis_data = {
-            'nodes': [{'id': nid, 'label': nlabel} for nid, nlabel in nodes],
-            'edges': edges
-        }
-
+      
         return {
             'flows_table': flows_table,
-            'vis_data': json.dumps(vis_data),
         }
