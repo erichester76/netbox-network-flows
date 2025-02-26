@@ -77,7 +77,6 @@ class VirtualMachineFlowsView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        
         if not instance:
             return {'flows_table': None}
         try:
@@ -85,11 +84,12 @@ class VirtualMachineFlowsView(generic.ObjectView):
                 models.Q(src_content_type=ContentType.objects.get_for_model(VirtualMachine), src_object_id=instance.pk) |
                 models.Q(dst_content_type=ContentType.objects.get_for_model(VirtualMachine), dst_object_id=instance.pk)
             )
+            flows_table = TrafficFlowTable(flows)
+            flows_table.configure(request)
         except Exception as e:
-            return {'flows_table': None}
-        
+            flows_table = None
         return {
-            'flows_table': flows,
+            'flows_table': flows_table,
         }
     
 # Apply similar changes to DeviceFlowsView
@@ -107,7 +107,6 @@ class DeviceFlowsView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        
         if not instance:
             return {'flows_table': None}
         try:
@@ -115,9 +114,10 @@ class DeviceFlowsView(generic.ObjectView):
                 models.Q(src_content_type=ContentType.objects.get_for_model(Device), src_object_id=instance.pk) |
                 models.Q(dst_content_type=ContentType.objects.get_for_model(Device), dst_object_id=instance.pk)
             )
+            flows_table = TrafficFlowTable(flows)
+            flows_table.configure(request)
         except Exception as e:
-            return {'flows_table': None}
-        
+            flows_table = None
         return {
-            'flows_table': flows,
+            'flows_table': flows_table,
         }
