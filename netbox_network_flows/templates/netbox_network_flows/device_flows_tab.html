@@ -1,5 +1,4 @@
 {% extends 'generic/object.html' %}
-{% load render_table from django_tables2 %}
 
 {% block content %}
 <div class="row">
@@ -26,87 +25,10 @@
                 {% endif %}
               </div>
             </div>
-          </div>
-
-          <!-- Flow Diagram Section (Open by Default) -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingDiagram">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDiagram" aria-expanded="true" aria-controls="collapseDiagram">
-                Flow Diagram
-              </button>
-            </h2>
-            <div id="collapseDiagram" class="accordion-collapse collapse show" aria-labelledby="headingDiagram" data-bs-parent="#flowsAccordion">
-              <div class="accordion-body">
-                <div id="flow-network" style="height: 800px;"></div>
-              </div>
-            </div>
-          </div>
+          </div>       
         </div>
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
-
-{% block javascript %}
-<script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
-<script type="application/json" id="vis-data">
-  {{ vis_data|safe }}
-</script>
-<script type="text/javascript">
-  document.addEventListener('DOMContentLoaded', function () {
-    var container = document.getElementById('flow-network');
-    var rawData = document.getElementById('vis-data').textContent;
-    var data = JSON.parse(rawData);
-    var options = {
-      physics: {
-        enabled: true,
-        forceAtlas2Based: {
-          gravitationalConstant: -2000,
-          centralGravity: 0.001,
-          springLength: 150,
-          springConstant: 0.02,
-          avoidOverlap: 1.5,
-          damping: 0.9
-        },
-        solver: 'forceAtlas2Based',
-        stabilization: {
-          enabled: true,
-          iterations: 2000,
-          updateInterval: 25
-        }
-      },
-      edges: {
-        arrows: 'to',
-        smooth: { type: 'curvedCW', roundness: 0.5 },
-        width: 0.8,
-        color: { inherit: false, opacity: 0.5 }
-      },
-      nodes: {
-        shape: 'dot',
-        size: 12,
-        font: { size: 10, face: 'Arial', align: 'center' },
-        color: { background: 'lightblue', border: 'darkblue', hover: { background: 'blue' } }
-      },
-      clusters: {
-        maxNodeCount: 20,
-        clusterEdgeThreshold: 10,
-        clusterNodeColor: isDarkMode ? '#5a95e2' : '#a6d5f7'
-      },
-      interaction: {
-        zoomView: true,
-        dragView: true,
-        hover: true,
-        tooltipDelay: 100,
-        hideEdgesOnDrag: true
-      }
-    };
-    var network = new vis.Network(container, data, options);
-
-    // Stabilize layout and lock physics
-    network.on('stabilizationIterationsDone', function () {
-      network.setOptions({ physics: false });
-    });
-  });
-</script>
 {% endblock %}
