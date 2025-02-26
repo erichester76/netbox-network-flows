@@ -1,5 +1,5 @@
 from .models import TrafficFlow, ServiceEndpoint
-from netbox.tables import NetBoxTable, columns
+from netbox.tables import NetBoxTable
 import django_tables2 as tables
 
 
@@ -25,7 +25,7 @@ class TrafficFlowTable(NetBoxTable):
         verbose_name='Destination Object',
         linkify=True
     )
-    service_endpoint_id = tables.Column(
+    service_endpoint = tables.Column(
         verbose_name='Service Endpoint',
         linkify=True
     )
@@ -33,4 +33,4 @@ class TrafficFlowTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = TrafficFlow
         fields = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'server_id', 'service_endpoint', 'created', 'last_updated')
-        default_columns = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'service_endpoint_id')
+        default_columns = ('src_ip', 'src_object', 'dst_ip', 'dst_object', 'protocol', 'service_port', 'service_endpoint')

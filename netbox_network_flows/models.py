@@ -40,7 +40,7 @@ class TrafficFlow(NetBoxModel):
     dst_object_id = models.PositiveIntegerField(null=True, blank=True)
     dst_object = GenericForeignKey('dst_content_type', 'dst_object_id')
     
-    service_endpoint_id = models.ForeignKey(ServiceEndpoint, on_delete=models.SET_NULL, null=True, blank=True, related_name='traffic_flows', help_text="Associated service endpoint")
+    service_endpoint = models.ForeignKey(ServiceEndpoint, on_delete=models.SET_NULL, null=True, blank=True, related_name='traffic_flows', help_text="Associated service endpoint")
       
     class Meta:
         unique_together = ('src_ip', 'dst_ip', 'protocol', 'service_port')
@@ -85,11 +85,11 @@ class TrafficFlow(NetBoxModel):
                     self.dst_object_id = ip.pk
                     
         if self.service_port:
-            service_endpoint, _ = ServiceEndpoint.objects.get_or_create(
+            service_endpoint_id, _ = ServiceEndpoint.objects.get_or_create(
                 service_port=self.service_port,
                 defaults={'application_name': f"Unknown_{self.service_port}"}
             )
-            self.service_endpoint_id = service_endpoint
+            self.service_endpoint = service_endpoint_id
             
         super().save(*args, **kwargs)
 
