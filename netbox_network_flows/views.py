@@ -78,18 +78,21 @@ class VirtualMachineFlowsView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        vm_ct = ContentType.objects.get_for_model(VirtualMachine)
-        flows = TrafficFlow.objects.filter(
-            models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
-            models.Q(dst_content_type=vm_ct, dst_object_id=instance.pk)
-        ).prefetch_related('src_content_type', 'dst_content_type')
-        flows_table = TrafficFlowTable(flows)
-        flows_table.configure(request)
-
+        if not instance:
+            return {'flows_table': None}
+        try:
+            flows = TrafficFlow.objects.filter(
+                models.Q(src_content_type=ContentType.objects.get_for_model(VirtualMachine), src_object_id=instance.pk) |
+                models.Q(dst_content_type=ContentType.objects.get_for_model(VirtualMachine), dst_object_id=instance.pk)
+            )
+            flows_table = TrafficFlowTable(flows)
+            flows_table.configure(request)
+        except Exception as e:
+            flows_table = None
         return {
             'flows_table': flows_table,
         }
-
+    
 # Apply similar changes to DeviceFlowsView
 @register_model_view(Device, 'flows', path='flows')
 class DeviceFlowsView(generic.ObjectView):
@@ -105,15 +108,17 @@ class DeviceFlowsView(generic.ObjectView):
     )
 
     def get_extra_context(self, request, instance):
-        vm_ct = ContentType.objects.get_for_model(Device)
-        flows = TrafficFlow.objects.filter(
-            models.Q(src_content_type=vm_ct, src_object_id=instance.pk) |
-            models.Q(dst_content_type=vm_ct, dst_object_id=instance.pk)
-        ).prefetch_related('src_content_type', 'dst_content_type')
-        flows_table = TrafficFlowTable(flows)
-        flows_table.configure(request)
-
-      
+        if not instance:
+            return {'flows_table': None}
+        try:
+            flows = TrafficFlow.objects.filter(
+                models.Q(src_content_type=ContentType.objects.get_for_model(Device), src_object_id=instance.pk) |
+                models.Q(dst_content_type=ContentType.objects.get_for_model(Device), dst_object_id=instance.pk)
+            )
+            flows_table = TrafficFlowTable(flows)
+            flows_table.configure(request)
+        except Exception as e:
+            flows_table = None
         return {
             'flows_table': flows_table,
         }
