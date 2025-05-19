@@ -9,6 +9,6 @@ class NetworkFlowsConfig(PluginConfig):
     author_email = 'hester1@clemson.edu'
     base_url = 'flows'
     min_version = '4.1.0'
-    max_version = '4.2.99'
+    max_version = '4.3.99'
 
 config = NetworkFlowsConfig
